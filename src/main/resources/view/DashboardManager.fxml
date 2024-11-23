@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="754.0" prefWidth="1268.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.booksphere.controller.DashboardManagerController">
+   <children>
+      <Group layoutX="75.0" layoutY="330.0">
+         <children>
+            <Button fx:id="btnViewOrder" mnemonicParsing="false" onAction="#viewOrderPage" prefHeight="27.0" prefWidth="157.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: transparent;" text="View Orders">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnViewItem" layoutX="188.0" mnemonicParsing="false" onAction="#viewItemPage" prefHeight="27.0" prefWidth="157.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: transparent;" text="View Items">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnViewPromotion" layoutX="380.0" mnemonicParsing="false" onAction="#viewPromotionPage" prefHeight="27.0" prefWidth="157.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: transparent;" text="View Promotions">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnViewStock" layoutX="575.0" mnemonicParsing="false" onAction="#viewStockPage" prefHeight="27.0" prefWidth="157.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: transparent;" text="View Stock">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnViewPayment" layoutX="770.0" mnemonicParsing="false" onAction="#viewPaymentPage" prefHeight="27.0" prefWidth="157.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: transparent;" text="View Payment">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnSendEmail" layoutX="961.0" mnemonicParsing="false" onAction="#sendEmailPage" prefHeight="27.0" prefWidth="157.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: transparent;" text="Send Emails">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </Group>
+      <ImageView fitHeight="255.0" fitWidth="1136.0" layoutX="66.0" layoutY="51.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/Untitled%20design%20(3).png" />
+         </image>
+      </ImageView>
+      <Label layoutX="172.0" layoutY="100.0" prefHeight="66.0" prefWidth="169.0" text="HELLO !  ">
+         <font>
+            <Font name="System Bold" size="40.0" />
+         </font>
+      </Label>
+      <Label layoutX="172.0" layoutY="150.0" prefHeight="66.0" prefWidth="726.0" text="WELCOME TO THE BOOKSPHERE" textFill="WHITE">
+         <font>
+            <Font name="Georgia Bold" size="40.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblUserName" layoutX="342.0" layoutY="100.0" prefHeight="66.0" prefWidth="192.0" textFill="#ddf1fc">
+         <font>
+            <Font name="Rockwell" size="40.0" />
+         </font>
+      </Label>
+      <BarChart fx:id="barChartItemSell" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" layoutX="82.0" layoutY="383.0" prefHeight="332.0" prefWidth="621.0" style="-fx-background-color: transparent; -fx-horizontal-grid-lines-visible: false; -fx-background-radius: 20px;" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
+         <xAxis>
+            <CategoryAxis side="BOTTOM" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis side="LEFT" />
+         </yAxis>
+      </BarChart>
+      <ImageView fitHeight="352.0" fitWidth="470.0" layoutX="405.0" layoutY="383.0" opacity="0.27" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/loglog.png" />
+         </image>
+      </ImageView>
+      <LineChart fx:id="lineChartOrders" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" layoutX="704.0" layoutY="383.0" prefHeight="332.0" prefWidth="530.0" style="-fx-background-color: transparent;" verticalGridLinesVisible="false">
+         <xAxis>
+            <CategoryAxis side="BOTTOM" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis side="LEFT" />
+         </yAxis>
+      </LineChart>
+      <Group layoutX="125.0" layoutY="277.0">
+         <children>
+            <ImageView fitHeight="41.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/icons8-add-shopping-cart-64.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="41.0" fitWidth="42.0" layoutX="190.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/icons8-books-64.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="41.0" fitWidth="42.0" layoutX="388.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/icons8-promotion-64.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="41.0" fitWidth="42.0" layoutX="575.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/icons8-inventory-64.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="41.0" fitWidth="42.0" layoutX="780.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/icons8-bank-cards-64.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="41.0" fitWidth="42.0" layoutX="962.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/icons8-gmail-logo-64.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Group>
+   </children>
+</AnchorPane>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="548.0" prefWidth="783.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.booksphere.controller.SettingController">
+   <children>
+      <Label layoutX="346.0" layoutY="22.0" prefHeight="46.0" prefWidth="146.0" text="SETTINGS">
+         <font>
+            <Font name="System Bold" size="30.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.9583333188837224" endY="0.3106060407378456" startX="0.9545454540939042" startY="0.8333333604263538">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color green="0.29019609093666077" blue="0.6784313917160034" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.364705890417099" green="0.8784313797950745" blue="0.9019607901573181" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <ImageView fitHeight="139.0" fitWidth="139.0" layoutX="350.0" layoutY="95.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/icons8-account-100.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="lblUserName" alignment="CENTER" layoutX="372.0" layoutY="242.0" prefHeight="24.0" prefWidth="102.0" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="138.0" layoutY="286.0" prefHeight="18.0" prefWidth="146.0" text="User Name">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtUserName" layoutX="303.0" layoutY="280.0" prefHeight="30.0" prefWidth="268.0" style="-fx-background-color: transparent; -fx-border-color: #00a8ff; -fx-border-width: 0px 0px 2px;" />
+      <Group layoutX="130.0" layoutY="358.0">
+         <children>
+            <Label layoutY="6.0" prefHeight="18.0" prefWidth="146.0" text="Current Password">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutY="50.0" prefHeight="18.0" prefWidth="146.0" text="New Password">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutY="96.0" prefHeight="18.0" prefWidth="146.0" text="Confirm Password">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="477.0" layoutY="96.0" onMouseClicked="#changePassword" prefHeight="18.0" prefWidth="102.0" text="Change Password" textFill="#2008ff">
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
+            </Label>
+            <PasswordField fx:id="txtCurrentPassword" layoutX="164.0" layoutY="-4.0" prefHeight="31.0" prefWidth="268.0" promptText="Current Password" style="-fx-background-color: transparent; -fx-border-color: #74b9ff; -fx-border-width: 0px 0px 2px;">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </PasswordField>
+            <PasswordField fx:id="txtNewPassword" layoutX="165.0" layoutY="34.0" prefHeight="31.0" prefWidth="268.0" promptText="New Password" style="-fx-background-color: transparent; -fx-border-color: #74b9ff; -fx-border-width: 0px 0px 2px;">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </PasswordField>
+            <PasswordField fx:id="txtConfirmPassword" layoutX="165.0" layoutY="80.0" prefHeight="31.0" prefWidth="268.0" promptText="Confirm Password" style="-fx-background-color: transparent; -fx-border-color: #74b9ff; -fx-border-width: 0px 0px 2px;">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </PasswordField>
+            <Group layoutX="164.0" layoutY="-8.0">
+               <children>
+                  <TextField fx:id="txtTextPassword" layoutY="4.0" prefHeight="31.0" prefWidth="268.0" style="-fx-background-color: transparent; -fx-border-color: #74b9ff; -fx-border-width: 0px 0px 2px;" visible="false" />
+                  <ImageView fx:id="imgShowPassword" fitHeight="31.0" fitWidth="29.0" layoutX="238.0" layoutY="3.0" onMouseClicked="#showPassword" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/icons8-closed-eye-50.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imgHidePassword" fitHeight="31.0" fitWidth="29.0" layoutX="238.0" onMouseClicked="#hidePassword" pickOnBounds="true" preserveRatio="true" visible="false">
+                     <image>
+                        <Image url="@../image/icons8-surprise-64.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+            <Group layoutX="165.0" layoutY="30.0">
+               <children>
+                  <TextField fx:id="txtTextPasswordNew" layoutY="4.0" prefHeight="31.0" prefWidth="268.0" style="-fx-background-color: transparent; -fx-border-color: #74b9ff; -fx-border-width: 0px 0px 2px;" visible="false" />
+                  <ImageView fx:id="imgShowPasswordNew" fitHeight="31.0" fitWidth="29.0" layoutX="238.0" layoutY="3.0" onMouseClicked="#showPasswordNew" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/icons8-closed-eye-50.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imgHidePasswordNew" fitHeight="31.0" fitWidth="29.0" layoutX="238.0" onMouseClicked="#hidePasswordNew" pickOnBounds="true" preserveRatio="true" visible="false">
+                     <image>
+                        <Image url="@../image/icons8-surprise-64.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+            <Group layoutX="165.0" layoutY="77.0">
+               <children>
+                  <TextField fx:id="txtTextPasswordConfirm" layoutY="4.0" prefHeight="31.0" prefWidth="268.0" style="-fx-background-color: transparent; -fx-border-color: #74b9ff; -fx-border-width: 0px 0px 2px;" visible="false" />
+                  <ImageView fx:id="imgShowPasswordConfirm" fitHeight="31.0" fitWidth="29.0" layoutX="238.0" layoutY="3.0" onMouseClicked="#showPasswordConfirm" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/icons8-closed-eye-50.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imgHidePasswordConfirm" fitHeight="31.0" fitWidth="29.0" layoutX="238.0" onMouseClicked="#hidePasswordConfirm" pickOnBounds="true" preserveRatio="true" visible="false">
+                     <image>
+                        <Image url="@../image/icons8-surprise-64.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+         </children>
+      </Group>
+      <Label layoutX="607.0" layoutY="286.0" onMouseClicked="#changeUserName" prefHeight="18.0" prefWidth="102.0" text="Change User Name" textFill="#2008ff">
+         <font>
+            <Font name="System Bold" size="10.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

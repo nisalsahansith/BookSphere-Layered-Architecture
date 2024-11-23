@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="785.0" prefWidth="1550.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.booksphere.controller.OwnerHomePageController">
+   <children>
+      <Pane prefHeight="786.0" prefWidth="242.0" style="-fx-background-color: #74b9ff;">
+         <children>
+            <Label fx:id="pageName" layoutX="73.0" layoutY="24.0" prefHeight="31.0" prefWidth="148.0" text="BOOK SPHERE" textFill="#262323">
+               <font>
+                  <Font name="Californian FB Bold" size="21.0" />
+               </font>
+            </Label>
+            <Group layoutX="14.0" layoutY="64.0">
+               <children>
+                  <VBox alignment="TOP_CENTER" layoutX="33.0" layoutY="68.0" prefHeight="534.0" prefWidth="148.0" spacing="45.0">
+                     <children>
+                        <Button fx:id="btnDashboard" mnemonicParsing="false" onAction="#navigateDashboard" prefHeight="27.0" prefWidth="150.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: #74b9ff;" text="Dashboard">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="manageCustomer" mnemonicParsing="false" onAction="#navigateToCustomerPage" prefHeight="27.0" prefWidth="157.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: #74b9ff;" text="Manage Customer">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="manageEmployee" mnemonicParsing="false" onAction="#navigateToEmployeePage" prefHeight="27.0" prefWidth="157.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: #74b9ff;" text="Manage Employe">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="manageInventory" mnemonicParsing="false" onAction="#navigateToInventoryPage" prefHeight="27.0" prefWidth="157.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: #74b9ff;" text="Manage Inventory">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="managePurchase" mnemonicParsing="false" onAction="#navigateToPurchasePage" prefHeight="27.0" prefWidth="157.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: #74b9ff;" text="Manage Purchases">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="manageSupplier" mnemonicParsing="false" onAction="#navigateToSupplierPage" prefHeight="27.0" prefWidth="157.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: #74b9ff;" text="Manage Suppliers">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="managePromotion" mnemonicParsing="false" onAction="#navigateToPromotionPage" prefHeight="27.0" prefWidth="157.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: #74b9ff;" text="Manage Promotions">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="manageUser" mnemonicParsing="false" onAction="#navigateToUserPage" prefHeight="27.0" prefWidth="157.0" style="-fx-border-color: blue; -fx-border-radius: 50px; -fx-background-color: #74b9ff;" text="Manage User">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <ImageView fitHeight="50.0" fitWidth="45.0" layoutX="29.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/icons8-human-48.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="lblUser" layoutX="74.0" layoutY="14.0" prefHeight="27.0" prefWidth="116.0">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblUserID" layoutX="35.0" layoutY="45.0" prefHeight="15.0" prefWidth="67.0">
+                     <font>
+                        <Font name="System Bold" size="10.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="81.0" layoutY="643.0" onMouseClicked="#SettingPage" prefHeight="18.0" prefWidth="53.0" text="Settings">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="68.0" layoutY="690.0" prefHeight="18.0" prefWidth="157.0" text="|  bookspherecom@gmail.com">
+                     <font>
+                        <Font name="System Bold" size="10.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="18.0" fitWidth="21.0" layoutX="60.0" layoutY="643.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/icons8-settings-50.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutY="690.0" prefHeight="18.0" prefWidth="67.0" text="BOOKSPHERE">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="80.0" layoutY="661.0" onMouseClicked="#navigateToLogin" prefHeight="18.0" prefWidth="45.0" text="Logout" underline="true">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Group>
+            <ImageView fitHeight="53.0" fitWidth="59.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/loglog.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <AnchorPane fx:id="ownerBodyPane" layoutX="256.0" layoutY="31.0" prefHeight="754.0" prefWidth="1268.0" style="-fx-border-radius: 50px; -fx-background-color: transparent; -fx-border-color: #74b9ff; -fx-border-width: 3px 3px 3px;">
+         <children>
+            <ImageView fitHeight="352.0" fitWidth="470.0" layoutX="385.0" layoutY="363.0" opacity="0.27" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/loglog.png" />
+               </image>
+            </ImageView>
+            <Group layoutX="153.0" layoutY="109.0">
+               <children>
+                  <Label fx:id="lblUserName" layoutX="170.0" prefHeight="66.0" prefWidth="192.0" textFill="#ddf1fc">
+                     <font>
+                        <Font name="Rockwell" size="40.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="0.80078125" layoutY="57.0" prefHeight="66.0" prefWidth="726.0" text="WELCOME TO THE BOOKSPHERE" textFill="WHITE">
+                     <font>
+                        <Font name="Georgia Bold" size="40.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Group>
+         </children>
+      </AnchorPane>
+      <Label fx:id="lblDate" layoutX="1171.0" layoutY="7.0" prefHeight="18.0" prefWidth="253.0">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblTime" layoutX="311.0" layoutY="7.0" prefHeight="18.0" prefWidth="253.0">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="473.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.booksphere.controller.ManagePaymentController">
+   <children>
+      <Group layoutX="98.0" layoutY="134.0">
+         <children>
+            <Label layoutY="2.0" prefHeight="26.0" prefWidth="158.0" text="Payment ID">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutY="60.0" prefHeight="26.0" prefWidth="169.0" text="Order ID">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtPayementID" disable="true" layoutX="158.0" prefHeight="30.0" prefWidth="266.0" style="-fx-background-color: transparent; -fx-border-color: #00a8ff; -fx-border-width: 0px 0px 2px;" />
+            <TextField fx:id="txtOrderId" disable="true" layoutX="158.0" layoutY="45.0" prefHeight="30.0" prefWidth="268.0" style="-fx-background-color: transparent; -fx-border-color: #00a8ff; -fx-border-width: 0px 0px 2px;" />
+         </children>
+      </Group>
+      <Label layoutX="224.0" layoutY="26.0" prefHeight="46.0" prefWidth="302.0" text="MANAGE PAYMENT" textFill="#74b9ff">
+         <font>
+            <Font name="System Bold" size="30.0" />
+         </font>
+      </Label>
+      <Group layoutX="98.0" layoutY="241.0">
+         <children>
+            <Label layoutY="2.0" prefHeight="26.0" prefWidth="158.0" text="Total">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutY="60.0" prefHeight="26.0" prefWidth="169.0" text="Payement Method">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtTotal" disable="true" layoutX="158.0" prefHeight="30.0" prefWidth="266.0" style="-fx-background-color: transparent; -fx-border-color: #00a8ff; -fx-border-width: 0px 0px 2px;" />
+            <ComboBox fx:id="cmbMethod" layoutX="157.0" layoutY="58.0" prefHeight="30.0" prefWidth="268.0" style="-fx-background-color: transparent; -fx-border-color: #00a8ff; -fx-border-width: 0px 0px 2px;" />
+         </children>
+      </Group>
+      <Label layoutX="509.0" layoutY="93.0" prefHeight="26.0" prefWidth="50.0" text="Date">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblDate" layoutX="568.0" layoutY="93.0" prefHeight="26.0" prefWidth="158.0">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnPaid" layoutX="525.0" layoutY="368.0" mnemonicParsing="false" onAction="#paymentDone" prefHeight="26.0" prefWidth="158.0" style="-fx-background-color: #00a8ff;" text="Paid">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

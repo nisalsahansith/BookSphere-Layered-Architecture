@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="785.0" prefWidth="1550.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.booksphere.controller.SignUpController">
+   <children>
+      <Pane layoutX="883.0" layoutY="68.0" opacity="0.13" prefHeight="570.0" prefWidth="554.0" style="-fx-background-color: grey;">
+         <effect>
+            <DropShadow height="77.15" radius="46.2625" spread="0.45" width="109.9">
+               <color>
+                  <Color red="0.31578946113586426" green="0.27368420362472534" blue="0.27368420362472534" opacity="0.12999999523162842" />
+               </color>
+            </DropShadow>
+         </effect>
+      </Pane>
+      <Label fx:id="welcomePageName" layoutX="988.0" layoutY="105.0" prefHeight="44.0" prefWidth="374.0" text=" Sign Up for BookSphere" textFill="#0f0f0ffa">
+         <font>
+            <Font name="Calibri" size="37.0" />
+         </font>
+      </Label>
+      <Pane prefHeight="785.0" prefWidth="754.0" style="-fx-background-color: #74b9ff;">
+         <children>
+            <ImageView fitHeight="550.0" fitWidth="540.0" layoutX="107.0" layoutY="145.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/Screenshot%202024-11-22%20104107.png" />
+               </image>
+            </ImageView>
+         </children></Pane>
+      <Button fx:id="btnSignUp" layoutX="1083.0" layoutY="513.0" mnemonicParsing="false" onAction="#signUp" prefHeight="26.0" prefWidth="154.0" style="-fx-background-color: #74b9ff;" text="Sign Up" textFill="WHITE">
+         <font>
+            <Font name="Calibri Bold" size="18.0" />
+         </font>
+      </Button>
+      <Label layoutX="1060.0" layoutY="564.0" text="If you have already account ?" />
+      <Label fx:id="signIn" layoutX="1224.0" layoutY="564.0" onMouseClicked="#navigateToSignIn" text="Sign In" textFill="#0f20dc" />
+      <ComboBox fx:id="comBox" layoutX="992.0" layoutY="467.0" onAction="#select" prefHeight="26.0" prefWidth="335.0" promptText="Role" style="-fx-background-color: transparent; -fx-border-color: #74b9ff;" />
+      <Label fx:id="label" layoutX="1001.0" layoutY="472.0" prefHeight="18.0" prefWidth="315.0" visible="false" />
+      <TextField fx:id="name" layoutX="989.0" layoutY="184.0" prefHeight="26.0" prefWidth="341.0" promptText="Name" style="-fx-background-color: transparent; -fx-border-color: #74b9ff; -fx-border-width: 0px 0px 2px;" />
+      <TextField fx:id="userName" layoutX="989.0" layoutY="278.0" prefHeight="26.0" prefWidth="341.0" promptText="Username" style="-fx-background-color: transparent; -fx-border-color: #74b9ff; -fx-border-width: 0px 0px 2px;" />
+      <TextField fx:id="conNum" layoutX="989.0" layoutY="421.0" prefHeight="26.0" prefWidth="341.0" promptText="Contact Number" style="-fx-background-color: transparent; -fx-border-color: #74b9ff; -fx-border-width: 0px 0px 2px;" />
+      <PasswordField fx:id="password" layoutX="988.0" layoutY="325.0" prefHeight="28.0" prefWidth="342.0" promptText="Password" style="-fx-border-color: #74b9ff; -fx-background-color: transparent; -fx-border-width: 0px 0px 2px;" />
+      <PasswordField fx:id="confirmPassword" layoutX="989.0" layoutY="377.0" prefHeight="28.0" prefWidth="342.0" promptText="Confirm Password" style="-fx-border-color: #74b9ff; -fx-background-color: transparent; -fx-border-width: 0px 0px 2px;" />
+      <Label fx:id="lblError" layoutX="989.0" layoutY="156.0" prefHeight="27.0" prefWidth="315.0" textFill="RED" />
+      <TextField fx:id="txtEmail" layoutX="990.0" layoutY="233.0" prefHeight="26.0" prefWidth="341.0" promptText="Email" style="-fx-background-color: transparent; -fx-border-color: #74b9ff; -fx-border-width: 0px 0px 2px;" />
+      <Group layoutX="975.0" layoutY="316.0">
+         <children>
+            <TextField fx:id="txtTextPassword" layoutX="14.0" prefHeight="38.0" prefWidth="342.0" style="-fx-background-color: transparent; -fx-border-color: #74b9ff; -fx-border-width: 0px 0px 2px;" visible="false" />
+            <ImageView fx:id="imgShowPassword" fitHeight="31.0" fitWidth="29.0" layoutX="327.0" layoutY="5.0" onMouseClicked="#showPassword" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/icons8-closed-eye-50.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="imgHidePassword" fitHeight="31.0" fitWidth="29.0" layoutX="327.0" layoutY="1.0" onMouseClicked="#hidePassword" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../image/icons8-surprise-64.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Group>
+      <Group layoutX="975.0" layoutY="374.0">
+         <children>
+            <TextField fx:id="txtTextPasswordConfirm" layoutX="14.0" layoutY="-5.0" prefHeight="38.0" prefWidth="342.0" style="-fx-background-color: transparent; -fx-border-color: #74b9ff; -fx-border-width: 0px 0px 2px;" visible="false" />
+            <ImageView fx:id="imgShowPasswordConfirm" fitHeight="31.0" fitWidth="29.0" layoutX="327.0" layoutY="2.0" onMouseClicked="#showPasswordConfirm" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/icons8-closed-eye-50.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="imgHidePasswordConfirm" fitHeight="31.0" fitWidth="29.0" layoutX="327.0" layoutY="1.0" onMouseClicked="#hidePasswordConfirm" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../image/icons8-surprise-64.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Group>
+   </children>
+</AnchorPane>
