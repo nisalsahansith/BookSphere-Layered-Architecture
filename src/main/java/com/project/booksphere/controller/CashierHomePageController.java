@@ -160,5 +160,6 @@ public class CashierHomePageController implements Initializable {
         };
 
         timer.start();
+        //comment
     }
 }
