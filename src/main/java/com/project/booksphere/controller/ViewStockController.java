@@ -1,7 +1,10 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.dto.tm.ViewStockTM;
-import com.project.booksphere.model.StockModel;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.ViewStockBo;
+import com.project.booksphere.bo.custom.impl.ViewStockBOImpl;
+import com.project.booksphere.dto.CustomDto;
+import com.project.booksphere.tm.ViewStockTM;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -73,8 +76,9 @@ public class ViewStockController implements Initializable {
     @FXML
     private TextField txtSellPrice;
 
-    StockModel stockModel = new StockModel();
-
+//    StockModel stockModel = new StockModel();
+//    private final StockDAO stockDAO = new StockDAOImpl();
+    private final ViewStockBo stockBo = (ViewStockBo) BOFactory.getInstance().getBO(BOFactory.BOType.VIEW_STOCK);
 
     @FXML
     void resetPage(ActionEvent event) throws SQLException {
@@ -85,18 +89,18 @@ public class ViewStockController implements Initializable {
     @FXML
     void searchOrder(MouseEvent event) throws SQLException {
         String id = txtSearch.getText();
-        ArrayList<ViewStockTM> stockTMS = stockModel.searchID(id);
+        ArrayList<CustomDto> stockTMS = stockBo.searchStockID(id);
         ObservableList<ViewStockTM> viewStockTMS = FXCollections.observableArrayList();
-        for (ViewStockTM viewStockTM: stockTMS){
+        for (CustomDto viewStockTM: stockTMS){
             ViewStockTM viewStockTms = new ViewStockTM(
                     viewStockTM.getStockId(),
-                    viewStockTM.getName(),
+                    viewStockTM.getStockName(),
                     viewStockTM.getItemId(),
-                    viewStockTM.getQty(),
+                    viewStockTM.getQtyOnHand(),
                     viewStockTM.getSellPrice(),
-                    viewStockTM.getBuyPrice(),
-                    viewStockTM.getSupplierId(),
-                    viewStockTM.getSupplierName(),
+                    viewStockTM.getUnitPrice(),
+                    viewStockTM.getSupId(),
+                    viewStockTM.getSupName(),
                     viewStockTM.getUserId()
             );
             viewStockTMS.add(viewStockTms);
@@ -144,7 +148,7 @@ public class ViewStockController implements Initializable {
         int qty = Integer.parseInt(txtQty.getText());
         double sellPrice = Double.parseDouble(txtSellPrice.getText());
         double buyPrice = Double.parseDouble(txtBuyPrice.getText());
-        boolean isUpdated = stockModel.updateStock(id,name,qty,sellPrice,buyPrice);
+        boolean isUpdated = stockBo.updateStock(id,name,qty,sellPrice,buyPrice);
         if (isUpdated){
             refresh();
             new Alert(Alert.AlertType.INFORMATION,"Stock Updated",ButtonType.OK).show();
@@ -167,18 +171,18 @@ public class ViewStockController implements Initializable {
 
 
     public void refreshTable() throws SQLException {
-        ArrayList<ViewStockTM> stockTMS = stockModel.getAll();
+        ArrayList<CustomDto> stockTMS = stockBo.getAllDetails();
         ObservableList<ViewStockTM> viewStockTMS = FXCollections.observableArrayList();
-        for (ViewStockTM viewStockTM: stockTMS){
+        for (CustomDto viewStockTM: stockTMS){
             ViewStockTM viewStockTms = new ViewStockTM(
                     viewStockTM.getStockId(),
-                    viewStockTM.getName(),
+                    viewStockTM.getStockName(),
                     viewStockTM.getItemId(),
-                    viewStockTM.getQty(),
+                    viewStockTM.getQtyOnHand(),
                     viewStockTM.getSellPrice(),
-                    viewStockTM.getBuyPrice(),
-                    viewStockTM.getSupplierId(),
-                    viewStockTM.getSupplierName(),
+                    viewStockTM.getUnitPrice(),
+                    viewStockTM.getSupId(),
+                    viewStockTM.getSupName(),
                     viewStockTM.getUserId()
             );
             viewStockTMS.add(viewStockTms);

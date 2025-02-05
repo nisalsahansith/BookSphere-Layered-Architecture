@@ -1,9 +1,11 @@
 package com.project.booksphere.controller;
 
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.InventoryBo;
+import com.project.booksphere.bo.custom.impl.InventoryBOImpl;
+import com.project.booksphere.dto.CustomDto;
 import com.project.booksphere.dto.ItemDto;
-import com.project.booksphere.dto.tm.ItemDetailTM;
-import com.project.booksphere.dto.tm.ItemTm;
-import com.project.booksphere.model.ItemModel;
+import com.project.booksphere.tm.ItemTm;
 import com.project.booksphere.util.SharedInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -79,8 +81,11 @@ public class ManageInventoryController implements Initializable {
     @FXML
     private TextField txtSearch;
 
-    ItemModel itemModel = new ItemModel();
+//    ItemModel itemModel = new ItemModel();
     SharedInfo sharedInfo = SharedInfo.getInstance();
+
+//    ItemDAO itemDAO = new ItemDAOImpl();
+    private final InventoryBo inventoryBo = (InventoryBo) BOFactory.getInstance().getBO(BOFactory.BOType.INVENTORY);
 
     @FXML
     void addExistingItem(ActionEvent event) throws IOException {
@@ -100,7 +105,7 @@ public class ManageInventoryController implements Initializable {
 
 
         ItemDto itemDto = new ItemDto(id,description,isbn,qty);
-        boolean isSaved = itemModel.saveItem(itemDto);
+        boolean isSaved = inventoryBo.saveItem(itemDto);
         if (isSaved) {
             new Alert(Alert.AlertType.INFORMATION,"Item is Saved",ButtonType.OK).show();
             sharedInfo.setItemId(id);
@@ -116,7 +121,7 @@ public class ManageInventoryController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Are you Sure want to delete this Item",ButtonType.YES);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.YES){
-            boolean isDeleted = itemModel.deleteItem(id);
+            boolean isDeleted = inventoryBo.deleteItem(id); //transaction
             if (isDeleted){
                 new Alert(Alert.AlertType.INFORMATION,"Item deleted",ButtonType.OK).show();
                 refreshPage();
@@ -148,7 +153,7 @@ public class ManageInventoryController implements Initializable {
         String isbn = txtIsbn.getText();
         String description = txtDescription.getText();
         ItemDto itemDto = new ItemDto(id,description,isbn,0);
-        boolean isUpdated = itemModel.updateItem(itemDto);
+        boolean isUpdated = inventoryBo.updateItem(itemDto);
         if (isUpdated) {
             new Alert(Alert.AlertType.INFORMATION,"Item is Updated",ButtonType.OK).show();
             refreshPage();
@@ -160,18 +165,18 @@ public class ManageInventoryController implements Initializable {
     @FXML
     void searchItems(MouseEvent event) throws SQLException {
         String search = txtSearch.getText();
-        ArrayList<ItemTm> itemTms = null;
-         itemTms = itemModel.search(search);
+        ArrayList<CustomDto> itemTms = null;
+         itemTms = inventoryBo.searchingItem(search);
          if (itemTms .isEmpty()) {
-             itemTms = itemModel.searchByName(search);
+             itemTms = inventoryBo.searchByItemName(search);
          }
          if (!itemTms.isEmpty()) {
              ObservableList<ItemTm> itemTmsObservableList = FXCollections.observableArrayList();
-             for (ItemTm itemTm : itemTms) {
+             for (CustomDto itemTm : itemTms) {
                  ItemTm itemTM = new ItemTm();
-                 itemTM.setId(itemTm.getId());
-                 itemTM.setDescription(itemTm.getDescription());
-                 itemTM.setQuantity(itemTm.getQuantity());
+                 itemTM.setId(itemTm.getItemId());
+                 itemTM.setDescription(itemTm.getItemDescription());
+                 itemTM.setQuantity(itemTm.getQtyOnHand());
                  itemTM.setISBN(itemTm.getISBN());
                  itemTmsObservableList.add(itemTM);
              }
@@ -196,7 +201,7 @@ public class ManageInventoryController implements Initializable {
 
     private void refreshPage() throws SQLException {
         refreshTable();
-        String itemId = itemModel.nextItemId();
+        String itemId = inventoryBo.nextItemId();
         lblItemId.setText(itemId);
         txtDescription.setText("");
         txtIsbn.setText("");
@@ -211,14 +216,14 @@ public class ManageInventoryController implements Initializable {
     }
 
     private void refreshTable() throws SQLException {
-        ArrayList<ItemDto> item = itemModel.getAllItem();
+        ArrayList<CustomDto> item = inventoryBo.getAllItems();
         ObservableList<ItemTm> itemTms = FXCollections.observableArrayList();
-        for (ItemDto itemDto : item) {
+        for (CustomDto itemDto : item) {
             ItemTm itemTm = new ItemTm();
-            itemTm.setId(itemDto.getId());
-            itemTm.setDescription(itemDto.getDescription());
+            itemTm.setId(itemDto.getItemId());
+            itemTm.setDescription(itemDto.getItemDescription());
 //            itemTm.setPrice(itemDto.getPrice());
-            itemTm.setQuantity(itemDto.getQty());
+            itemTm.setQuantity(itemDto.getQtyOnHand());
             itemTm.setISBN(itemDto.getISBN());
             itemTms.add(itemTm);
         }

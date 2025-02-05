@@ -1,6 +1,5 @@
 package com.project.booksphere.dto;
 
-import com.project.booksphere.db.DBConnection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PaymentDetailsDto {
+public class PaymentDto {
     private String paymentId;
     private String orderId;
     private String paymentMethod;

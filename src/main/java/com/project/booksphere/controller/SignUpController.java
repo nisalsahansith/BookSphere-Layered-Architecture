@@ -1,7 +1,15 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.model.EmployeeModel;
-import com.project.booksphere.model.SignUpModel;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.SignUpBo;
+import com.project.booksphere.bo.custom.impl.SignUpBOImpl;
+import com.project.booksphere.dao.custom.EmployeeDAO;
+import com.project.booksphere.dao.custom.UserDAO;
+import com.project.booksphere.dao.custom.impl.EmployeeDAOImpl;
+import com.project.booksphere.dao.custom.impl.UserDAOImpl;
+import com.project.booksphere.db.DBConnection;
+import com.project.booksphere.dto.EmployeeDto;
+import com.project.booksphere.dto.UserDto;
 import com.project.booksphere.util.EncryptPassword;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +26,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -80,8 +89,12 @@ public class SignUpController implements Initializable {
     @FXML
     private TextField txtEmail;
 
-    private SignUpModel signUpModel = new SignUpModel();
-    private EmployeeModel employeeModel = new EmployeeModel();
+//    private SignUpModel signUpModel = new SignUpModel();
+//    private final EmployeeModel employeeModel = new EmployeeModel();
+
+//    private final EmployeeDAO employeeDAO = new EmployeeDAOImpl();
+//    private final UserDAO userDAO = new UserDAOImpl();
+    private final SignUpBo signUpBo = (SignUpBo) BOFactory.getInstance().getBO(BOFactory.BOType.SIGNUP);
 
     @FXML
     void select(ActionEvent event) {
@@ -92,7 +105,7 @@ public class SignUpController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            boolean isOwn = employeeModel.checkOwner();
+            boolean isOwn = signUpBo.checkOwner();
             if (isOwn){
                 ObservableList<String> list = FXCollections.observableArrayList("Manager","Stock Manager","Cashier");
                 comBox.setItems(list);
@@ -120,45 +133,61 @@ public class SignUpController implements Initializable {
 
     @FXML
     void signUp(ActionEvent event) throws SQLException {
-        String employId = signUpModel.getNextEmployId();
-        String userId = signUpModel.getNextUserId();
+        String employId = signUpBo.getNextEmployId();
+        String userId = signUpBo.nextUserId();
         String Name = name.getText();
         String username = userName.getText();
-        boolean isHaveUserNAme = signUpModel.checkUser(username);
+        boolean isHaveUserNAme = signUpBo.checkUser(username);
         String Password = password.getText();
         String conPassword = confirmPassword.getText();
         String phone = conNum.getText();
-        boolean isHavePhone = signUpModel.checkPhone(phone);
+        boolean isHavePhone = signUpBo.checkPhone(phone);
         String email = txtEmail.getText();
-        boolean isHaveEmail = signUpModel.checkEmail(email);
-        Date date = Date.valueOf(LocalDate.now());
+        boolean isHaveEmail = signUpBo.checkEmail(email);
+        LocalDate date = Date.valueOf(LocalDate.now()).toLocalDate();
         String role = (String) comBox.getSelectionModel().getSelectedItem();
-
-        if (!isHaveUserNAme && !isHaveEmail && !isHavePhone) {
-            if (Password.equals(conPassword)) {
-                String hashPassword = EncryptPassword.hashPassword(Password);
-                System.out.println(hashPassword);
-                boolean isSignUp = signUpModel.signUp(employId, userId, Name, role, phone, username, hashPassword, email, date);
-                if (isSignUp) {
-                    try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
-
-                        Parent loginPageRoot = loader.load();
-                        Scene logScene = new Scene(loginPageRoot);
-
-                        Stage primaryStage = (Stage) welcomePageName.getScene().getWindow();
-                        primaryStage.setScene(logScene);
-                    } catch (IOException e) {
-                        System.out.println("Error" + e.getMessage());
+        Connection connection = null;
+        try {
+            connection = DBConnection.getInstance().getConnection();
+            if (!isHaveUserNAme && !isHaveEmail && !isHavePhone) {
+                if (Password.equals(conPassword)) {
+                    String hashPassword = EncryptPassword.hashPassword(Password);
+                    System.out.println(hashPassword);
+                    connection.setAutoCommit(false);
+                    boolean isEmployeeSave = signUpBo.saveEmployee(new EmployeeDto(employId,Name,role,phone,email,date));
+                    if (!isEmployeeSave) {
+                        connection.rollback();
+                        connection.setAutoCommit(true);
                     }
+                    boolean isUserSave = signUpBo.saveUser(new UserDto(userId,username,hashPassword,employId));
+                    if (isUserSave) {
+                        try {
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
 
+                            Parent loginPageRoot = loader.load();
+                            Scene logScene = new Scene(loginPageRoot);
+
+                            Stage primaryStage = (Stage) welcomePageName.getScene().getWindow();
+                            primaryStage.setScene(logScene);
+                        } catch (IOException e) {
+                            System.out.println("Error" + e.getMessage());
+                        }
+                        connection.commit();
+                        connection.setAutoCommit(true);
+
+                    }
+                } else {
+                    lblError.setText("Password confirmation is wrong");
+                    connection.rollback();
+                    connection.setAutoCommit(true);
                 }
-            } else {
-                lblError.setText("Password confirmation is wrong");
+            }else {
+                lblError.setText("Duplicate values");
             }
-        }else {
-            lblError.setText("Duplicate values");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
+
     }
 
     @FXML

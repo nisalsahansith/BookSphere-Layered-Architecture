@@ -1,8 +1,8 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.db.DBConnection;
-import com.project.booksphere.dto.PaymentDetailsDto;
-import com.project.booksphere.model.PaymentModel;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.PaymentBo;
+import com.project.booksphere.dto.PaymentDto;
 import com.project.booksphere.util.PaymentInfo;
 import com.project.booksphere.util.SharedInfo;
 import javafx.event.ActionEvent;
@@ -14,15 +14,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.view.JasperViewer;
 
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class ManagePaymentController implements Initializable {
@@ -45,9 +41,13 @@ public class ManagePaymentController implements Initializable {
     @FXML
     private TextField txtTotal;
 
-    PaymentModel paymentModel = new PaymentModel();
+//    PaymentModel paymentModel = new PaymentModel();
     SharedInfo sharedInfo = SharedInfo.getInstance();
     PaymentInfo paymentInfo = PaymentInfo.getInstance();
+
+//    PaymentDAO paymentDAO = new PaymentDAOImpl();
+    private final PaymentBo paymentBo = (PaymentBo) BOFactory.getInstance().getBO(BOFactory.BOType.PAYMENT);
+
     @FXML
     void paymentDone(ActionEvent event) throws JRException, SQLException {
         String paymentID = txtPayementID.getText();
@@ -58,11 +58,11 @@ public class ManagePaymentController implements Initializable {
 
         if (!cmbMethod.getSelectionModel().isEmpty()) {
             cmbMethod.setStyle(cmbMethod.getStyle() + "-fx-border-color:  #00a8ff; " );
-            PaymentDetailsDto paymentDetailsDto = new PaymentDetailsDto(
+            PaymentDto paymentDto = new PaymentDto(
                     paymentID, orderID, paymentMethod, total, date
             );
 
-            paymentInfo.setPaymentDetailsDto(paymentDetailsDto);
+            paymentInfo.setPaymentDetailsDto(paymentDto);
 
             Stage stage = (Stage) btnPaid.getScene().getWindow();
             stage.close();
@@ -75,7 +75,7 @@ public class ManagePaymentController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             lblDate.setText(LocalDate.now().toString());
-            txtPayementID.setText(paymentModel.getNextId());
+            txtPayementID.setText(paymentBo.nextPaymentId());
             txtOrderId.setText(sharedInfo.getOrderId());
             System.out.println(txtOrderId.getText());
             txtTotal.setText(String.valueOf(sharedInfo.getTotal()));

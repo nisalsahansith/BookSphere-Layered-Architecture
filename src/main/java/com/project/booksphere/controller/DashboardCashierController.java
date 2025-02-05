@@ -1,7 +1,9 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.model.EmployeeModel;
-import com.project.booksphere.util.CrudUtil;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.CashierDashboardBo;
+import com.project.booksphere.bo.custom.impl.CashierDashboardBOImpl;
+import com.project.booksphere.dao.CrudUtil;
 import com.project.booksphere.util.SharedInfo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -51,8 +53,11 @@ public class DashboardCashierController implements Initializable {
     @FXML
     private LineChart<String, Number> lineChartOrders;
 
-    private final EmployeeModel employeeModel = new EmployeeModel();
+//    private final EmployeeModel employeeModel = new EmployeeModel();
     private final SharedInfo sharedInfo = SharedInfo.getInstance();
+
+//    private final EmployeeDAO employeeDAO = new EmployeeDAOImpl();
+    private final CashierDashboardBo cashierDashboardBo = (CashierDashboardBo) BOFactory.getInstance().getBO(BOFactory.BOType.CASHIER_DASHBOARD);
 
     @FXML
     void sendEmailPage(ActionEvent event) throws IOException {
@@ -109,7 +114,7 @@ public class DashboardCashierController implements Initializable {
     }
 
     public void setName(String id) throws SQLException {
-        String getName = employeeModel.getName(id);
+        String getName = cashierDashboardBo.getNameCashier(id);
         lblUserName.setText(getName);
     }
 

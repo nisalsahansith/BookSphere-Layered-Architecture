@@ -1,6 +1,10 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.model.UserModel;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.SettingBo;
+import com.project.booksphere.bo.custom.impl.SettingBOImpl;
+import com.project.booksphere.dao.custom.UserDAO;
+import com.project.booksphere.dao.custom.impl.UserDAOImpl;
 import com.project.booksphere.util.EncryptPassword;
 import com.project.booksphere.util.SharedInfo;
 import javafx.fxml.FXML;
@@ -15,8 +19,8 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class SettingController implements Initializable {
-    private SharedInfo sharedInfo = SharedInfo.getInstance();
-    private UserModel userModel = new UserModel();
+
+//    private UserModel userModel = new UserModel();
 //    private OwnerHomePageController ownerHomePageController = new OwnerHomePageController(this);
 @FXML
 private ImageView imgHidePassword;
@@ -66,17 +70,22 @@ private ImageView imgHidePassword;
     @Setter
     private OwnerHomePageController ownerHomePageController;
 
+    private SharedInfo sharedInfo = SharedInfo.getInstance();
+
+//    private UserDAO userDAO = new UserDAOImpl();
+    private final SettingBo settingBo = (SettingBo) BOFactory.getInstance().getBO(BOFactory.BOType.SETTING);
+
     @FXML
     void changePassword(MouseEvent event) throws SQLException {
         String currentPassword = txtCurrentPassword.getText();
         String newPassword = txtNewPassword.getText();
         String confirmPassword = txtConfirmPassword.getText();
         String userId = sharedInfo.getUserID();
-        String password = userModel.getPassword(userId);
+        String password = settingBo.getUserPassword(userId);
         if (EncryptPassword.verifyPassword(currentPassword,password)){
             if (newPassword.equals(confirmPassword)){
                 String hashPassword = EncryptPassword.hashPassword(newPassword);
-                boolean isChangePassword = userModel.updatePassword(hashPassword,userId);
+                boolean isChangePassword = settingBo.updateUserPassword(hashPassword,userId);
                 if (isChangePassword){
                     new Alert(Alert.AlertType.INFORMATION,"Password is updated",ButtonType.OK).show();
                     txtCurrentPassword.setText("");
@@ -97,7 +106,7 @@ private ImageView imgHidePassword;
     void changeUserName(MouseEvent event) throws SQLException {
         String userName = txtUserName.getText();
         String userId = sharedInfo.getUserID();
-        boolean isUpdatedName = userModel.setUserName(userId,userName);
+        boolean isUpdatedName = settingBo.setUserName(userId,userName);
         if (isUpdatedName){
             new Alert(Alert.AlertType.INFORMATION, "User Name is Updated", ButtonType.OK).show();
             txtUserName.setText("");
@@ -119,7 +128,7 @@ private ImageView imgHidePassword;
 
     public void setTexUserName() throws SQLException {
         String id = sharedInfo.getUserID();
-        String name = userModel.getName(id);
+        String name = settingBo.getUserName(id);
         lblUserName.setText(name);
     }
 

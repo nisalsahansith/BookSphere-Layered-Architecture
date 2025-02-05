@@ -1,14 +1,14 @@
 package com.project.booksphere.controller;
 
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.ItemDetailBo;
+import com.project.booksphere.bo.custom.impl.ItemDetailBOImpl;
 import com.project.booksphere.dto.ItemDetailDto;
 import com.project.booksphere.dto.StockDetailDto;
 import com.project.booksphere.dto.StockDto;
-import com.project.booksphere.dto.tm.ItemDetailTM;
-import com.project.booksphere.model.ItemDetailModel;
-import com.project.booksphere.model.ItemModel;
-import com.project.booksphere.model.StockModel;
-import com.project.booksphere.model.SupplierModel;
-import com.project.booksphere.util.NewPopUpWindow;
+import com.project.booksphere.dto.SupplierDto;
+import com.project.booksphere.tm.ItemDetailTM;
+import com.project.booksphere.util.NavigationPage;
 import com.project.booksphere.util.SharedInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -83,9 +83,16 @@ public class ItemDetailController implements Initializable {
     @FXML
     private TextField txtUniPrice;
 
-    ItemDetailModel itemDetailModel = new ItemDetailModel();
-    SupplierModel supplierModel = new SupplierModel();
-    StockModel stockModel = new StockModel();
+//    ItemDetailModel itemDetailModel = new ItemDetailModel();
+//    SupplierModel supplierModel = new SupplierModel();
+//    StockModel stockModel = new StockModel();
+
+//    ItemDetailDAO itemDetailDAO = new ItemDetailDAOImpl();
+//    SupplierDAO supplierDAO = new SupplierDAOImpl();
+//    StockDAO stockDAO = new StockDAOImpl();
+
+    private final ItemDetailBo itemDetailBo = (ItemDetailBo) BOFactory.getInstance().getBO(BOFactory.BOType.ITEM_DETAIL);
+
     SharedInfo sharedInfo = SharedInfo.getInstance();
     @FXML
     void saveOnAction(ActionEvent event) throws SQLException {
@@ -102,7 +109,7 @@ public class ItemDetailController implements Initializable {
         StockDto stockDto = new StockDto(stockID,stockDesc,userID);
         StockDetailDto stockDetailDto = new StockDetailDto(stockID,supplyID,unitPrice,qty);
 
-        boolean isSaved = itemDetailModel.saveItemDetail(itemDetailDto,stockDto,stockDetailDto);
+        boolean isSaved = itemDetailBo.saveItemDetails(itemDetailDto,stockDto,stockDetailDto);
         if (isSaved){
             refreshPage();
             new Alert(Alert.AlertType.INFORMATION,"Item Added success full",ButtonType.OK).show();
@@ -115,8 +122,14 @@ public class ItemDetailController implements Initializable {
     @FXML
     void searchSupplier(ActionEvent event) throws SQLException {
         String id = txtSupplyID.getText();
-        String supId = supplierModel.searchSupplier(id);
-        lblDetail.setText(supId);
+        ArrayList<SupplierDto> supId = itemDetailBo.searchSupplier(id);
+        SupplierDto supplierDto;
+        String supplierId = "No Supplier";
+        if (!supId.isEmpty()){
+            supplierDto = supId.getFirst();
+            supplierId = supplierDto.getSupId();
+        }
+        lblDetail.setText(supplierId);
         if (supId.equals("No Supplier")){
             lblAddSupplier.setVisible(true);
         }else {
@@ -144,7 +157,7 @@ public class ItemDetailController implements Initializable {
 
     private void refreshPage() throws SQLException {
         refreshTable();
-        txtStockID.setText(stockModel.getNextStockId());
+        txtStockID.setText(itemDetailBo.nextItemId());
         txtItemID.setText(sharedInfo.getItemId());
         txtQty.setText("");
         txtSellPrice.setText("");
@@ -157,9 +170,9 @@ public class ItemDetailController implements Initializable {
     }
 
     private void refreshTable() throws SQLException {
-        ArrayList<ItemDetailTM> itemDetail = itemDetailModel.getAll();
+        ArrayList<ItemDetailDto> itemDetail = itemDetailBo.getAllItems();
         ObservableList<ItemDetailTM> itemDetailTMS = FXCollections.observableArrayList();
-        for (ItemDetailTM itemDetailTM : itemDetail){
+        for (ItemDetailDto itemDetailTM : itemDetail){
             ItemDetailTM itemDetailTms = new ItemDetailTM();
             itemDetailTms.setItemId(itemDetailTM.getItemId());
             itemDetailTms.setStockId(itemDetailTM.getStockId());
@@ -185,6 +198,6 @@ public class ItemDetailController implements Initializable {
 
     @FXML
     void popUpSupplierPage(MouseEvent event) throws IOException {
-        NewPopUpWindow.newWindowPopUp("/view/ManageSupplier.fxml");
+        NavigationPage.newWindowPopUp("/view/ManageSupplier.fxml");
     }
 }

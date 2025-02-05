@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class NewPopUpWindow {
+public class NavigationPage {
     public void newWindowPopUpEmail(String path,String email) throws IOException {
 //        Parent load = FXMLLoader.load(getClass().getResource(path));
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
@@ -28,14 +28,15 @@ public class NewPopUpWindow {
         stage.showAndWait();
     }
     public static void newWindowPopUp(String path) throws IOException {
-        Parent load = FXMLLoader.load(NewPopUpWindow.class.getResource(path));
+        Parent load = FXMLLoader.load(NavigationPage.class.getResource(path));
         Scene scene = new Scene(load);
         Stage stage = new Stage();
         stage.setScene(scene);
-        stage.getIcons().add(new Image(NewPopUpWindow.class.getResourceAsStream("/image/logo.jpg")));
+        stage.getIcons().add(new Image(NavigationPage.class.getResourceAsStream("/image/logo.jpg")));
         stage.setTitle("Payment");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
         stage.showAndWait();
     }
+
 }

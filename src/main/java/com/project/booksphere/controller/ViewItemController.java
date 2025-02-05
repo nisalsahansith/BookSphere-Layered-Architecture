@@ -1,9 +1,10 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.dto.tm.ItemTm;
-import com.project.booksphere.dto.tm.ViewItemTM;
-import com.project.booksphere.dto.tm.ViewOrderTM;
-import com.project.booksphere.model.ItemModel;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.ViewItemBo;
+import com.project.booksphere.bo.custom.impl.ViewItemBOImpl;
+import com.project.booksphere.dto.CustomDto;
+import com.project.booksphere.tm.ViewItemTM;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -50,7 +51,9 @@ public class ViewItemController implements Initializable {
     @FXML
     private TableView<ViewItemTM> tblItemView;
 
-    private final ItemModel itemModel = new ItemModel();
+//    private final ItemModel itemModel = new ItemModel();
+//    private final ItemDAO itemDAO = new ItemDAOImpl();
+    private final ViewItemBo viewItemBo = (ViewItemBo) BOFactory.getInstance().getBO(BOFactory.BOType.VIEW_ITEM);
 
     @FXML
     private TextField txtSearch;
@@ -64,21 +67,21 @@ public class ViewItemController implements Initializable {
     @FXML
     void searchOrder(MouseEvent event) throws SQLException {
         String search = txtSearch.getText();
-        ArrayList<ViewItemTM> viewItemTMS = null;
-         viewItemTMS = itemModel.searchFromID(search);
+        ArrayList<CustomDto> viewItemTMS = null;
+         viewItemTMS = viewItemBo.searchFromID(search);
          if (viewItemTMS.isEmpty()) {
-             viewItemTMS = itemModel.searchFromName(search);
+             viewItemTMS = viewItemBo.searchFromName(search);
          }
         ObservableList<ViewItemTM> viewOrderTMs = FXCollections.observableArrayList();
-        for (ViewItemTM viewItemTM : viewItemTMS) {
+        for (CustomDto viewItemTM : viewItemTMS) {
             ViewItemTM viewOrderTmS = new ViewItemTM(
                     viewItemTM.getItemId(),
-                    viewItemTM.getDesc(),
-                    viewItemTM.getIsbn(),
-                    viewItemTM.getPrice(),
-                    viewItemTM.getQty(),
+                    viewItemTM.getItemDescription(),
+                    viewItemTM.getISBN(),
+                    viewItemTM.getSellPrice(),
+                    viewItemTM.getQtyOnHand(),
                     viewItemTM.getStockId(),
-                    viewItemTM.getName()
+                    viewItemTM.getSupName()
             );
             viewOrderTMs.add(viewOrderTmS);
         }
@@ -104,17 +107,17 @@ public class ViewItemController implements Initializable {
     }
 
     public void refreshTable() throws SQLException {
-        ArrayList<ViewItemTM> itemTMS = itemModel.getAllItems();
+        ArrayList<CustomDto> itemTMS = viewItemBo.getAllItems(); //join query
         ObservableList<ViewItemTM> viewItemTMS = FXCollections.observableArrayList();
-        for (ViewItemTM itemTM : itemTMS){
+        for (CustomDto itemTM : itemTMS){
             ViewItemTM viewItemTM = new ViewItemTM(
                     itemTM.getItemId(),
-                    itemTM.getDesc(),
-                    itemTM.getIsbn(),
-                    itemTM.getPrice(),
-                    itemTM.getQty(),
+                    itemTM.getItemDescription(),
+                    itemTM.getISBN(),
+                    itemTM.getSellPrice(),
+                    itemTM.getQtyOnHand(),
                     itemTM.getStockId(),
-                    itemTM.getName()
+                    itemTM.getSupName()
             );
             viewItemTMS.addAll(viewItemTM);
         }

@@ -1,4 +1,4 @@
-package com.project.booksphere.util;
+package com.project.booksphere.dao;
 
 import com.project.booksphere.db.DBConnection;
 

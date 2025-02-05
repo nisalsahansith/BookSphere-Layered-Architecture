@@ -1,9 +1,11 @@
 package com.project.booksphere.controller;
 
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.SupplierBo;
+import com.project.booksphere.bo.custom.impl.SupplierBOImpl;
 import com.project.booksphere.dto.SupplierDto;
-import com.project.booksphere.dto.tm.SupplierTM;
-import com.project.booksphere.model.SupplierModel;
-import com.project.booksphere.util.NewPopUpWindow;
+import com.project.booksphere.tm.SupplierTM;
+import com.project.booksphere.util.NavigationPage;
 import com.project.booksphere.util.SharedInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -77,9 +79,12 @@ public class ManageSupplierController implements Initializable {
     @FXML
     private TextField txtPhoneNumber;
 
-    SupplierModel supplierModel = new SupplierModel();
+//    SupplierModel supplierModel = new SupplierModel();
     SharedInfo sharedInfo = SharedInfo.getInstance();
-    NewPopUpWindow newPopUpWindow = new NewPopUpWindow();
+    NavigationPage navigationPage = new NavigationPage();
+//    SupplierDAO supplierDAO = new SupplierDAOImpl();
+
+    private final SupplierBo supplierBo = (SupplierBo) BOFactory.getInstance().getBO(BOFactory.BOType.SUPPLIER);
 
     @FXML
     void addData(ActionEvent event) throws SQLException {
@@ -90,7 +95,7 @@ public class ManageSupplierController implements Initializable {
         String phone = txtPhoneNumber.getText();
         String userId = sharedInfo.getUserID();
         SupplierDto supplierDto = new SupplierDto(supId,name,phone,address,email,userId);
-        boolean isSaved = supplierModel.saveSupplier(supplierDto);
+        boolean isSaved = supplierBo.saveSupplier(supplierDto);
         if (isSaved) {
             refreshPage();
             new Alert(Alert.AlertType.INFORMATION,"Supplier saved successfully",ButtonType.OK).show();
@@ -105,7 +110,7 @@ public class ManageSupplierController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this Supplier?", ButtonType.YES);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.YES){
-            boolean isDeleted = supplierModel.deleteSupplier(id);
+            boolean isDeleted = supplierBo.deleteSupplier(id);
             if (isDeleted){
                 new Alert(Alert.AlertType.INFORMATION, "Supplier Deleted", ButtonType.OK).show();
                 refreshPage();
@@ -124,7 +129,7 @@ public class ManageSupplierController implements Initializable {
         String phone = txtPhoneNumber.getText();
         String userId = sharedInfo.getUserID();
         SupplierDto supplierDto = new SupplierDto(supId,name,phone,address,email,userId);
-        boolean isSaved = supplierModel.updateSupplier(supplierDto);
+        boolean isSaved = supplierBo.updateSupplier(supplierDto);
         if (isSaved) {
             refreshPage();
             new Alert(Alert.AlertType.INFORMATION,"Supplier update successfully",ButtonType.OK).show();
@@ -136,7 +141,7 @@ public class ManageSupplierController implements Initializable {
     @FXML
     void sendGmail(ActionEvent event) throws IOException {
         String email = txtEmail.getText();
-        newPopUpWindow.newWindowPopUpEmail("/view/SendMail.fxml",email);
+        navigationPage.newWindowPopUpEmail("/view/SendMail.fxml",email);
     }
 
     @Override
@@ -157,7 +162,7 @@ public class ManageSupplierController implements Initializable {
 
     public void refreshPage() throws SQLException {
         refreshTable();
-        lblSupID.setText(supplierModel.getNextID());
+        lblSupID.setText(supplierBo.nextSupplierId());
         txtAddress.setText("");
         txtEmail.setText("");
         txtName.setText("");
@@ -170,7 +175,7 @@ public class ManageSupplierController implements Initializable {
     }
 
     private void refreshTable() throws SQLException {
-        ArrayList<SupplierDto> supplierDto = supplierModel.getAllSupplier();
+        ArrayList<SupplierDto> supplierDto = supplierBo.getAllSupplier();
         ObservableList<SupplierTM> supplierTMS = FXCollections.observableArrayList();
         for (SupplierDto supplierDTO : supplierDto) {
             SupplierTM supplierTM = new SupplierTM(
@@ -204,7 +209,7 @@ public class ManageSupplierController implements Initializable {
 
     @FXML
     void resetPage(ActionEvent event) throws SQLException {
-        lblSupID.setText(supplierModel.getNextID());
+        lblSupID.setText(supplierBo.nextSupplierId());
         txtEmail.setText("");
         txtName.setText("");
         txtPhoneNumber.setText("");
@@ -219,7 +224,7 @@ public class ManageSupplierController implements Initializable {
     @FXML
     void searchSupplier(MouseEvent event) throws SQLException {
         String search = txtSearch.getText();
-        ArrayList<SupplierDto> supplierDto = supplierModel.searchSupId(search);
+        ArrayList<SupplierDto> supplierDto = supplierBo.searchSupplier(search);
         ObservableList<SupplierTM> supplierTMS = FXCollections.observableArrayList();
         for (SupplierDto supplierDTO : supplierDto) {
             SupplierTM supplierTM = new SupplierTM(

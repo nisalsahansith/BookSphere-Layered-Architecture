@@ -1,7 +1,12 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.model.EmployeeModel;
-import com.project.booksphere.model.UserModel;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.ForgotPasswordBo;
+import com.project.booksphere.bo.custom.impl.ForgotPasswordBOImpl;
+import com.project.booksphere.dao.custom.EmployeeDAO;
+import com.project.booksphere.dao.custom.UserDAO;
+import com.project.booksphere.dao.custom.impl.EmployeeDAOImpl;
+import com.project.booksphere.dao.custom.impl.UserDAOImpl;
 import com.project.booksphere.util.EncryptPassword;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -48,8 +53,12 @@ public class ForgotPasswordController implements Initializable {
     @FXML
     private TextField txtOTP;
 
-    private EmployeeModel employeeModel = new EmployeeModel();
-    private UserModel userModel = new UserModel();
+//    private EmployeeModel employeeModel = new EmployeeModel();
+//    private UserModel userModel = new UserModel();
+
+//    private final EmployeeDAO employeeDAO = new EmployeeDAOImpl();
+//    private final UserDAO userDAO = new UserDAOImpl();
+    private final ForgotPasswordBo forgotPasswordBo = (ForgotPasswordBo) BOFactory.getInstance().getBO(BOFactory.BOType.FORGOT_PASSWORD);
     int OTP = random.nextInt(100000,999999);
 
     @FXML
@@ -57,10 +66,10 @@ public class ForgotPasswordController implements Initializable {
         String email = txtEmail.getText();
         String newPassword = txtNewPassword.getText();
         String confirmPassword = txtConfirmPassword.getText();
-        String empId = employeeModel.getEmpId(email);
+        String empId = forgotPasswordBo.getEmpId(email);
         if (newPassword.equals(confirmPassword)) {
             String hashPassword = EncryptPassword.hashPassword(newPassword);
-            boolean reset = userModel.resetPassword(hashPassword,empId);
+            boolean reset = forgotPasswordBo.resetPassword(hashPassword,empId);
             if (reset){
                 new Alert(Alert.AlertType.INFORMATION,"Password reset successfully.",ButtonType.OK).show();
                 Stage stage = (Stage) btnReset.getScene().getWindow();
@@ -76,7 +85,7 @@ public class ForgotPasswordController implements Initializable {
     @FXML
     void sendGmail(ActionEvent event) throws SQLException {
         String email = txtEmail.getText();
-        boolean isHasEmail = employeeModel.checkEmail(email);
+        boolean isHasEmail = forgotPasswordBo.checkEmail(email);
         if (isHasEmail){
             txtEmail.setStyle(txtEmail.getStyle()+"-fx-border-color:  #00a8ff; ");
             SendMailController sendMailController = new SendMailController();

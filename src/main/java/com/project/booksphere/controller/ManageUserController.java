@@ -1,8 +1,12 @@
 package com.project.booksphere.controller;
 
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.UserBo;
+import com.project.booksphere.bo.custom.impl.UserBOImpl;
+import com.project.booksphere.dao.custom.UserDAO;
+import com.project.booksphere.dao.custom.impl.UserDAOImpl;
 import com.project.booksphere.dto.UserDto;
-import com.project.booksphere.model.UserModel;
-import com.project.booksphere.util.NewPopUpWindow;
+import com.project.booksphere.util.NavigationPage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -48,8 +52,11 @@ public class ManageUserController implements Initializable {
     @FXML
     private TextField txtSearch;
 
-    UserModel userModel = new UserModel();
-    NewPopUpWindow newPopUpWindow = new NewPopUpWindow();
+//    UserModel userModel = new UserModel();
+    NavigationPage navigationPage = new NavigationPage();
+
+//    UserDAO userDAO = new UserDAOImpl();
+    private final UserBo userBo = (UserBo) BOFactory.getInstance().getBO(BOFactory.BOType.USER);
 
 
     @FXML
@@ -59,7 +66,7 @@ public class ManageUserController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure want to delete this User",ButtonType.YES);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.YES) {
-            boolean isDelete = userModel.deleteUser(id);
+            boolean isDelete = userBo.deleteUser(id);
             if (isDelete) {
                 refresh();
                 new Alert(Alert.AlertType.INFORMATION, "User deleted successfully").show();
@@ -79,7 +86,7 @@ public class ManageUserController implements Initializable {
     @FXML
     void searchOrder(MouseEvent event) throws SQLException {
         String id = txtSearch.getText();
-        ArrayList<UserDto> userDtos = userModel.getAllId(id);
+        ArrayList<UserDto> userDtos = userBo.searchUser(id);
         ObservableList<UserDto> userDTOS = FXCollections.observableArrayList();
         for (UserDto userDto: userDtos){
             UserDto userDTos = new UserDto(
@@ -96,11 +103,11 @@ public class ManageUserController implements Initializable {
     @FXML
     void sendGmail(ActionEvent event) throws SQLException, IOException {
         String employeeId = tblUser.getSelectionModel().getSelectedItem().getEmployeeId();
-        String email = userModel.getMail(employeeId);
+        String email = userBo.getMailUser(employeeId);
         if (email != null) {
-            newPopUpWindow.newWindowPopUpEmail("/view/SendMail.fxml", email);
+            navigationPage.newWindowPopUpEmail("/view/SendMail.fxml", email);
         }else {
-            newPopUpWindow.newWindowPopUpEmail("/view/SendMail.fxml","no email found");
+            navigationPage.newWindowPopUpEmail("/view/SendMail.fxml","no email found");
         }
     }
 
@@ -130,7 +137,7 @@ public class ManageUserController implements Initializable {
     }
 
     public void refresh() throws SQLException {
-        ArrayList<UserDto> userDtos = userModel.getAll();
+        ArrayList<UserDto> userDtos = userBo.getAllUsers();
         ObservableList<UserDto> userDTOS = FXCollections.observableArrayList();
         for (UserDto userDto: userDtos){
             UserDto userDTos = new UserDto(

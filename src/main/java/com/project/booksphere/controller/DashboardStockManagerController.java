@@ -1,7 +1,9 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.model.EmployeeModel;
-import com.project.booksphere.util.CrudUtil;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.StockManagerDashboardBo;
+import com.project.booksphere.bo.custom.impl.StockManagerDashboardBOImpl;
+import com.project.booksphere.dao.CrudUtil;
 import com.project.booksphere.util.SharedInfo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,8 +47,11 @@ public class DashboardStockManagerController implements Initializable {
     @FXML
     private Label lblUserName;
 
-    private final EmployeeModel employeeModel = new EmployeeModel();
+//    private final EmployeeModel employeeModel = new EmployeeModel();
     private final SharedInfo sharedInfo = SharedInfo.getInstance();
+
+//    private final EmployeeDAO employeeDAO = new EmployeeDAOImpl();
+    private final StockManagerDashboardBo stockManagerDashboardBo = (StockManagerDashboardBo) BOFactory.getInstance().getBO(BOFactory.BOType.STOCK_MANAGER_DASHBOARD);
 
 
     @FXML
@@ -80,7 +85,7 @@ public class DashboardStockManagerController implements Initializable {
         }
     }
     public void setName(String id) throws SQLException {
-        String getName = employeeModel.getName(id);
+        String getName = stockManagerDashboardBo.getStockManagerName(id);
         lblUserName.setText(getName);
     }
 

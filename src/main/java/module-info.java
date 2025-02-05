@@ -12,7 +12,7 @@ module com.example.booksphere {
     requires jbcrypt;
 
 
-    opens com.project.booksphere.dto.tm to javafx.base;
+    opens com.project.booksphere.tm to javafx.base;
     opens com.project.booksphere.dto to javafx.base;
 //    opens com.project.booksphere.dto to javafx.fxml;
     opens com.project.booksphere.controller to javafx.fxml;

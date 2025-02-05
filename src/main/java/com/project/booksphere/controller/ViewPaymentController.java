@@ -1,7 +1,8 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.dto.PaymentDetailsDto;
-import com.project.booksphere.model.PaymentModel;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.ViewPaymentBo;
+import com.project.booksphere.dto.PaymentDto;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,27 +30,29 @@ public class ViewPaymentController implements Initializable {
     private Button btnReset;
 
     @FXML
-    private TableColumn<PaymentDetailsDto, Date> columnDate;
+    private TableColumn<PaymentDto, Date> columnDate;
 
     @FXML
-    private TableColumn<PaymentDetailsDto, String> columnOrderID;
+    private TableColumn<PaymentDto, String> columnOrderID;
 
     @FXML
-    private TableColumn<PaymentDetailsDto, String> columnPaymentID;
+    private TableColumn<PaymentDto, String> columnPaymentID;
 
     @FXML
-    private TableColumn<PaymentDetailsDto, String> columnPaymentMethod;
+    private TableColumn<PaymentDto, String> columnPaymentMethod;
 
     @FXML
-    private TableColumn<PaymentDetailsDto, Double> columnTotal;
+    private TableColumn<PaymentDto, Double> columnTotal;
 
     @FXML
-    private TableView<PaymentDetailsDto> tblPaymentView;
+    private TableView<PaymentDto> tblPaymentView;
 
     @FXML
     private TextField txtSearch;
 
-    PaymentModel paymentModel = new PaymentModel();
+//    PaymentModel paymentModel = new PaymentModel();
+//    PaymentDAO paymentDAO = new PaymentDAOImpl();
+    private final ViewPaymentBo viewPaymentBo = (ViewPaymentBo) BOFactory.getInstance().getBO(BOFactory.BOType.VIEW_PAYMENT);
 
     @FXML
     void resetPage(ActionEvent event) throws SQLException {
@@ -60,19 +63,19 @@ public class ViewPaymentController implements Initializable {
     @FXML
     void searchOrder(MouseEvent event) throws SQLException {
         String id = txtSearch.getText();
-        ArrayList<PaymentDetailsDto> detailsDto = paymentModel.getAllID(id);
-        ObservableList<PaymentDetailsDto> paymentDetailsDtos = FXCollections.observableArrayList();
-        for (PaymentDetailsDto paymentDetailsDto: detailsDto){
-            PaymentDetailsDto paymentDetailsDTo = new PaymentDetailsDto(
-                    paymentDetailsDto.getPaymentId(),
-                    paymentDetailsDto.getOrderId(),
-                    paymentDetailsDto.getPaymentMethod(),
-                    paymentDetailsDto.getTotal(),
-                    paymentDetailsDto.getDate()
+        ArrayList<PaymentDto> detailsDto = viewPaymentBo.getAllPaymentID(id);
+        ObservableList<PaymentDto> paymentDtos = FXCollections.observableArrayList();
+        for (PaymentDto paymentDto : detailsDto){
+            PaymentDto paymentDTo = new PaymentDto(
+                    paymentDto.getPaymentId(),
+                    paymentDto.getOrderId(),
+                    paymentDto.getPaymentMethod(),
+                    paymentDto.getTotal(),
+                    paymentDto.getDate()
             );
-            paymentDetailsDtos.add(paymentDetailsDTo);
+            paymentDtos.add(paymentDTo);
         }
-        tblPaymentView.setItems(paymentDetailsDtos);
+        tblPaymentView.setItems(paymentDtos);
     }
 
     @Override
@@ -91,19 +94,19 @@ public class ViewPaymentController implements Initializable {
     }
 
     public void refreshTable() throws SQLException {
-        ArrayList<PaymentDetailsDto> detailsDto = paymentModel.getAll();
-        ObservableList<PaymentDetailsDto> paymentDetailsDtos = FXCollections.observableArrayList();
-        for (PaymentDetailsDto paymentDetailsDto: detailsDto){
-            PaymentDetailsDto paymentDetailsDTo = new PaymentDetailsDto(
-                    paymentDetailsDto.getPaymentId(),
-                    paymentDetailsDto.getOrderId(),
-                    paymentDetailsDto.getPaymentMethod(),
-                    paymentDetailsDto.getTotal(),
-                    paymentDetailsDto.getDate()
+        ArrayList<PaymentDto> detailsDto = viewPaymentBo.getAllPayments();
+        ObservableList<PaymentDto> paymentDtos = FXCollections.observableArrayList();
+        for (PaymentDto paymentDto : detailsDto){
+            PaymentDto paymentDTo = new PaymentDto(
+                    paymentDto.getPaymentId(),
+                    paymentDto.getOrderId(),
+                    paymentDto.getPaymentMethod(),
+                    paymentDto.getTotal(),
+                    paymentDto.getDate()
             );
-            paymentDetailsDtos.add(paymentDetailsDTo);
+            paymentDtos.add(paymentDTo);
         }
-        tblPaymentView.setItems(paymentDetailsDtos);
+        tblPaymentView.setItems(paymentDtos);
     }
 
 

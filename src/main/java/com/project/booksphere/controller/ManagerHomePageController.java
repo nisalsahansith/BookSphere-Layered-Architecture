@@ -1,7 +1,12 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.model.EmployeeModel;
-import com.project.booksphere.model.UserModel;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.ManagerHomePageBo;
+import com.project.booksphere.bo.custom.impl.ManagerHomePageBOImpl;
+import com.project.booksphere.dao.custom.EmployeeDAO;
+import com.project.booksphere.dao.custom.UserDAO;
+import com.project.booksphere.dao.custom.impl.EmployeeDAOImpl;
+import com.project.booksphere.dao.custom.impl.UserDAOImpl;
 import com.project.booksphere.util.SharedInfo;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
@@ -67,9 +72,14 @@ public class ManagerHomePageController implements Initializable {
     @FXML
     private Label pageName;
 
-    private final EmployeeModel employeeModel = new EmployeeModel();
-    private final UserModel userModel = new UserModel();
+//    private final EmployeeModel employeeModel = new EmployeeModel();
+//    private final UserModel userModel = new UserModel();
     private final SharedInfo sharedInfo = SharedInfo.getInstance();
+
+//    private final EmployeeDAO employeeDAO = new EmployeeDAOImpl();
+//    private final UserDAO userDAO = new UserDAOImpl();
+
+    private final ManagerHomePageBo managerHomePageBo = (ManagerHomePageBo) BOFactory.getInstance().getBO(BOFactory.BOType.MANAGER_HOMEPAGE);
 
     @FXML
     void SettingPage(MouseEvent event) throws IOException {
@@ -151,10 +161,10 @@ public class ManagerHomePageController implements Initializable {
     }
 
     public void setName(String id) throws SQLException {
-        String getName = employeeModel.getName(id);
+        String getName = managerHomePageBo.getEmployeeName(id);
         lblUser.setText(getName);
         System.out.println(getName);
-        String userId = userModel.getUserID(id);
+        String userId = managerHomePageBo.getUserID(id);
         sharedInfo.setUserID(userId);
         System.out.println(userId);
         if (getName != null && userId != null){

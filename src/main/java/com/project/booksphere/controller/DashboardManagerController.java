@@ -1,7 +1,9 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.model.EmployeeModel;
-import com.project.booksphere.util.CrudUtil;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.ManagerDashboardBo;
+import com.project.booksphere.bo.custom.impl.ManagerDashboardBOImpl;
+import com.project.booksphere.dao.CrudUtil;
 import com.project.booksphere.util.SharedInfo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -53,8 +55,11 @@ public class DashboardManagerController implements Initializable {
     @FXML
     private Label lblUserName;
 
-    private final EmployeeModel employeeModel = new EmployeeModel();
+//    private final EmployeeModel employeeModel = new EmployeeModel();
     private final SharedInfo sharedInfo = SharedInfo.getInstance();
+
+//    private final EmployeeDAO employeeDAO = new EmployeeDAOImpl();
+    private final ManagerDashboardBo managerDashboardBo = (ManagerDashboardBo) BOFactory.getInstance().getBO(BOFactory.BOType.MANAGER_DASHBOARD);
 
     @FXML
     void viewItemPage(ActionEvent event) throws IOException {
@@ -112,7 +117,7 @@ public class DashboardManagerController implements Initializable {
     }
 
     public void setName(String id) throws SQLException {
-        String getName = employeeModel.getName(id);
+        String getName = managerDashboardBo.getManagerName(id);
         lblUserName.setText(getName);
     }
 

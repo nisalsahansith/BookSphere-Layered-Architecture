@@ -1,13 +1,14 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.model.EmployeeModel;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.SecuirityProtectionBo;
+import com.project.booksphere.bo.custom.impl.SecuirityProtectionBOImpl;
+import com.project.booksphere.dao.custom.EmployeeDAO;
+import com.project.booksphere.dao.custom.impl.EmployeeDAOImpl;
 import com.project.booksphere.util.SharedInfo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -30,10 +31,13 @@ public class SecuirityProtectionController implements Initializable {
     private TextField txtOtp;
 
     Random random = new Random();
-    private final EmployeeModel employeeModel = new EmployeeModel();
+//    private final EmployeeModel employeeModel = new EmployeeModel();
     private final LoginController loginController = new LoginController();
     private final SharedInfo sharedInfo = SharedInfo.getInstance();
     private int otp = 0;
+
+//    private final EmployeeDAO employeeDAO = new EmployeeDAOImpl();
+    private final SecuirityProtectionBo secuirityProtectionBo = (SecuirityProtectionBo) BOFactory.getInstance().getBO(BOFactory.BOType.SECUIRITY_PROTECTION);
 
     @FXML
     void resendOtp(MouseEvent event) throws SQLException {
@@ -66,7 +70,7 @@ public class SecuirityProtectionController implements Initializable {
 
     public void sendOtp(int otp) throws SQLException {
         SendMailController sendMailController = new SendMailController();
-        String email = employeeModel.getMail();
+        String email = secuirityProtectionBo.getMail();
         System.out.println(email);
         String from = "bookspherecom@gmail.com";
         String subject = "Your OTP Code";

@@ -1,11 +1,11 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.dto.CustomerDto;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.EmployeeBo;
+import com.project.booksphere.bo.custom.impl.EmployeeBOImpl;
 import com.project.booksphere.dto.EmployeeDto;
-import com.project.booksphere.dto.tm.CustomerTM;
-import com.project.booksphere.dto.tm.EmployeeTM;
-import com.project.booksphere.model.EmployeeModel;
-import com.project.booksphere.util.NewPopUpWindow;
+import com.project.booksphere.tm.EmployeeTM;
+import com.project.booksphere.util.NavigationPage;
 import com.project.booksphere.util.Validate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,7 +21,6 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -91,8 +90,11 @@ public class ManageEmployeeController implements Initializable {
     private TextField txtRole;
 
     private Validate validate = new Validate();
-    private EmployeeModel employeeModel = new EmployeeModel();
-    private NewPopUpWindow newPopUpWindow = new NewPopUpWindow();
+//    private EmployeeModel employeeModel = new EmployeeModel();
+    private NavigationPage navigationPage = new NavigationPage();
+
+//    EmployeeDAO employeeDAO = new EmployeeDAOImpl();
+    private final EmployeeBo employeeBo = (EmployeeBo) BOFactory.getInstance().getBO(BOFactory.BOType.EMPLOYEE);
 
     @FXML
     void addData(ActionEvent event) throws SQLException {
@@ -120,7 +122,7 @@ public class ManageEmployeeController implements Initializable {
         }
         if (isValidName && isValidPhone && isValidEmail) {
             EmployeeDto employeeDto = new EmployeeDto(id,name,role,phone,email,date);
-            boolean isSaved = employeeModel.saveEmployee(employeeDto);
+            boolean isSaved = employeeBo.saveEmployee(employeeDto);
             if (isSaved){
                 new Alert(Alert.AlertType.INFORMATION,"Employee added successfully",ButtonType.OK).show();
                 refreshPage();
@@ -137,7 +139,7 @@ public class ManageEmployeeController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this employee?", ButtonType.YES);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.YES){
-            boolean isDeleted = employeeModel.deleteCustomer(employeeId);
+            boolean isDeleted = employeeBo.deleteEmployee(employeeId);
             if (isDeleted){
                 new Alert(Alert.AlertType.INFORMATION, "Employee Deleted", ButtonType.OK).show();
                 refreshPage();
@@ -155,7 +157,7 @@ public class ManageEmployeeController implements Initializable {
     @FXML
     void sendGmail(ActionEvent event) throws IOException {
         String email = txtEmail.getText();
-        newPopUpWindow.newWindowPopUpEmail("/view/SendMail.fxml",email);
+        navigationPage.newWindowPopUpEmail("/view/SendMail.fxml",email);
     }
 
     @FXML
@@ -207,7 +209,7 @@ public class ManageEmployeeController implements Initializable {
 
         if (isValidName && isValidEmail && isValidPhone){
             EmployeeDto employeeDto = new EmployeeDto(id,name,role,phone,email,date);
-            boolean isUpdated = employeeModel.updateEmployee(employeeDto);
+            boolean isUpdated = employeeBo.updateEmployee(employeeDto);
             if (isUpdated){
                 new Alert(Alert.AlertType.INFORMATION, "Employee Updated", ButtonType.OK).show();
                 refreshPage();
@@ -237,7 +239,7 @@ public class ManageEmployeeController implements Initializable {
 
     public void refreshPage() throws SQLException {
         refreshTable();
-        String employeeId = employeeModel.nextEmployeeId();
+        String employeeId = employeeBo.nextEmployeeId();
         lblEmployeeId.setText(employeeId);
 
         txtEmployeeName.setText("");
@@ -253,7 +255,7 @@ public class ManageEmployeeController implements Initializable {
     }
 
     private void refreshTable() throws SQLException {
-        ArrayList<EmployeeDto> employees = employeeModel.getAllEmployee();
+        ArrayList<EmployeeDto> employees = employeeBo.getAllEmployee();
         ObservableList<EmployeeTM> employeeTMS = FXCollections.observableArrayList();
         for (EmployeeDto employee : employees) {
             EmployeeTM employeeTM = new EmployeeTM();
@@ -270,7 +272,7 @@ public class ManageEmployeeController implements Initializable {
 
     @FXML
     void resetPage(ActionEvent event) throws SQLException {
-        lblEmployeeId.setText(employeeModel.nextEmployeeId());
+        lblEmployeeId.setText(employeeBo.nextEmployeeId());
         txtEmployeeName.setText("");
         txtEmail.setText("");
         txtPhoneNumber.setText("");
@@ -285,7 +287,7 @@ public class ManageEmployeeController implements Initializable {
     @FXML
     void searchEmploye(MouseEvent event) throws SQLException {
         String id = txtSearch.getText();
-        ArrayList<EmployeeDto> employees = employeeModel.search(id);
+        ArrayList<EmployeeDto> employees = employeeBo.searchEmployee(id);
         ObservableList<EmployeeTM> employeeTMS = FXCollections.observableArrayList();
         for (EmployeeDto employee : employees) {
             EmployeeTM employeeTM = new EmployeeTM();

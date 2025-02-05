@@ -1,10 +1,10 @@
 package com.project.booksphere.util;
 
-import com.project.booksphere.dto.PaymentDetailsDto;
+import com.project.booksphere.dto.PaymentDto;
 
 public class PaymentInfo {
     private static PaymentInfo instance;
-    private PaymentDetailsDto paymentDetailsDto = new PaymentDetailsDto();
+    private PaymentDto paymentDto = new PaymentDto();
 
     public static PaymentInfo getInstance(){
         if (instance == null){
@@ -13,11 +13,11 @@ public class PaymentInfo {
         return instance;
     }
 
-    public void setPaymentDetailsDto(PaymentDetailsDto paymentDetailsDto){
-        this.paymentDetailsDto = paymentDetailsDto;
+    public void setPaymentDetailsDto(PaymentDto paymentDto){
+        this.paymentDto = paymentDto;
     }
 
-    public PaymentDetailsDto getPaymentDetailsDto(){
-        return paymentDetailsDto;
+    public PaymentDto getPaymentDetailsDto(){
+        return paymentDto;
     }
 }

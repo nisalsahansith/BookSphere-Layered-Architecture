@@ -1,11 +1,11 @@
 package com.project.booksphere.controller;
 
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.CustomerBo;
+import com.project.booksphere.bo.custom.impl.CustomerBOImpl;
 import com.project.booksphere.dto.CustomerDto;
-import com.project.booksphere.dto.tm.CustomerTM;
-import com.project.booksphere.model.CustomerModel;
-import com.project.booksphere.model.UserDetailModel;
-import com.project.booksphere.util.NewPopUpWindow;
-import com.project.booksphere.util.SharedInfo;
+import com.project.booksphere.tm.CustomerTM;
+import com.project.booksphere.util.NavigationPage;
 import com.project.booksphere.util.Validate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -77,9 +77,11 @@ public class ManageCustomerController implements Initializable {
     private TextField txtPhoneNumber;
 
     private Validate validate = new Validate();
-    private CustomerModel customerModel = new CustomerModel();
-    NewPopUpWindow newPopUpWindow = new NewPopUpWindow();
+//    private CustomerModel customerModel = new CustomerModel();
+    NavigationPage navigationPage = new NavigationPage();
 
+//    private final CustomerDAO customerDAO = new CustomerDAOImpl();
+    private final CustomerBo customerBo = (CustomerBo) BOFactory.getInstance().getBO(BOFactory.BOType.CUSTOMER);
 
     @FXML
     void addData(ActionEvent event) throws SQLException {
@@ -108,7 +110,7 @@ public class ManageCustomerController implements Initializable {
         if (isValidName && isValidEmail && isValidPhone && id != "" && name != "" && email != "" && phone != ""){
             CustomerDto customerDto = new CustomerDto(id,name,phone,email,orderId);
 
-            boolean isSaved = customerModel.saveCustomer(customerDto);
+            boolean isSaved = customerBo.saveCustomer(customerDto); //transaction
             if (isSaved){
                 new Alert(Alert.AlertType.INFORMATION, "Customer Added Successfully", ButtonType.OK).show();
                 refreshPage();
@@ -126,7 +128,7 @@ public class ManageCustomerController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this customer?", ButtonType.YES);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.YES){
-            boolean isDeleted = customerModel.deleteCustomer(customerId);
+            boolean isDeleted = customerBo.deleteCustomer(customerId);  //transaction
             if (isDeleted){
                 new Alert(Alert.AlertType.INFORMATION, "Customer Deleted", ButtonType.OK).show();
                 refreshPage();
@@ -144,7 +146,7 @@ public class ManageCustomerController implements Initializable {
     @FXML
     void sendGmail(ActionEvent event) throws IOException {
         String email = txtEmail.getText();
-        newPopUpWindow.newWindowPopUpEmail("/view/SendMail.fxml",email);
+        navigationPage.newWindowPopUpEmail("/view/SendMail.fxml",email);
     }
 
     @FXML
@@ -173,7 +175,7 @@ public class ManageCustomerController implements Initializable {
 
         if (isValidName && isValidEmail && isValidPhone ){
             CustomerDto customerDto = new CustomerDto(id,name,phone,email,orderId);
-            boolean isUpdated = customerModel.updateCustomer(customerDto);
+            boolean isUpdated = customerBo.updateCustomer(customerDto);
             if (isUpdated){
                 new Alert(Alert.AlertType.INFORMATION, "Customer Updated", ButtonType.OK).show();
                 refreshPage();
@@ -199,7 +201,7 @@ public class ManageCustomerController implements Initializable {
 
     public void refreshPage() throws SQLException {
         refreshTable();
-        String nextCustomerId = customerModel.nextCustomerId();
+        String nextCustomerId = customerBo.nextCustomerId();
         lblCustomerId.setText(nextCustomerId);
 
         txtCustomerName.setText("");
@@ -214,7 +216,7 @@ public class ManageCustomerController implements Initializable {
     }
 
     private void refreshTable() throws SQLException {
-        ArrayList<CustomerDto> customerDtos = customerModel.loadCustomerDetails();
+        ArrayList<CustomerDto> customerDtos = customerBo.getAllCustomer();
         ObservableList<CustomerTM> customerTMS = FXCollections.observableArrayList();
         for (CustomerDto customerDto : customerDtos){
             CustomerTM customerTM = new CustomerTM(
@@ -246,7 +248,7 @@ public class ManageCustomerController implements Initializable {
 
     @FXML
     void resetPage(ActionEvent event) throws SQLException {
-        lblCustomerId.setText(customerModel.nextCustomerId());
+        lblCustomerId.setText(customerBo.nextCustomerId());
         txtCustomerName.setText("");
         txtEmail.setText("");
         txtPhoneNumber.setText("");
@@ -261,7 +263,7 @@ public class ManageCustomerController implements Initializable {
     @FXML
     void searchCustomer(MouseEvent event) throws SQLException {
         String searchText = txtSearch.getText();
-        ArrayList<CustomerDto> customerDtos = customerModel.searchByCustID(searchText);
+        ArrayList<CustomerDto> customerDtos = customerBo.searchCustomer(searchText); //
         ObservableList<CustomerTM> customerTMS = FXCollections.observableArrayList();
         for (CustomerDto customerDto : customerDtos){
             CustomerTM customerTM = new CustomerTM(

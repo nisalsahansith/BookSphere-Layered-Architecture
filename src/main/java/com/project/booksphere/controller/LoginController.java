@@ -1,9 +1,15 @@
 package com.project.booksphere.controller;
 
 
-import com.project.booksphere.model.LoginModel;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.LoginBo;
+import com.project.booksphere.bo.custom.impl.LoginBOImpl;
+import com.project.booksphere.dao.custom.EmployeeDAO;
+import com.project.booksphere.dao.custom.UserDAO;
+import com.project.booksphere.dao.custom.impl.EmployeeDAOImpl;
+import com.project.booksphere.dao.custom.impl.UserDAOImpl;
 import com.project.booksphere.util.EncryptPassword;
-import com.project.booksphere.util.NewPopUpWindow;
+import com.project.booksphere.util.NavigationPage;
 import com.project.booksphere.util.SharedInfo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -57,60 +63,35 @@ public class LoginController implements Initializable {
     private ImageView imgShowPassword;
 
 
-    private final LoginModel model = new LoginModel();
+//    private final LoginModel model = new LoginModel();
     private final SharedInfo sharedInfo = SharedInfo.getInstance();
+
+//    private final EmployeeDAO employeeDAOImpl = new EmployeeDAOImpl();
+//    private final UserDAO userDAO = new UserDAOImpl();
+
+    private final LoginBo loginBo = (LoginBo) BOFactory.getInstance().getBO(BOFactory.BOType.LOGIN);
 
     void login(){
         String userName = txtUserName.getText();
         String password = txtPassword.getText();
         try {
-            String employId = model.login(userName);
+            String employId = loginBo.getEmployeeId(userName);
             sharedInfo.setEmployeeId(employId);
-            String storePassword = model.getPassword(employId);
+            String storePassword = loginBo.getUserPassword(employId);
             System.out.println(storePassword);
             boolean isVerify = EncryptPassword.verifyPassword(password,storePassword);
             if(isVerify){
-                String role = model.checkRole(employId);
+                String role = loginBo.checkRole(employId);
                 if(role != null){
                     if (role.equals("Owner")) {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/OwnerHomePage.fxml"));
-                        Parent homePageRoot = loader.load();
-                        Scene homeScene = new Scene(homePageRoot);
-
-                        Stage primaryStage = (Stage) pageName.getScene().getWindow();
-                        primaryStage.setScene(homeScene);
-                        primaryStage.setTitle("Home Page");
+                        navigatePage("/view/OwnerHomePage.fxml","Home Page");
                     } else if (role.equals("Manager")){
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ManagerHomePage.fxml"));
-
-                        Parent homePageRoot = loader.load();
-                        Scene homeScene = new Scene(homePageRoot);
-
-                        Stage primaryStage = (Stage) pageName.getScene().getWindow();
-                        primaryStage.setScene(homeScene);
-                        primaryStage.setTitle("Home Page");
-
+                        navigatePage("/view/ManagerHomePage.fxml","Home Page");
                     } else if (role.equals("Stock Manager")){
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/StockManagerHomePage.fxml"));
-
-                        Parent homePageRoot = loader.load();
-                        Scene homeScene = new Scene(homePageRoot);
-
-                        Stage primaryStage = (Stage) pageName.getScene().getWindow();
-                        primaryStage.setScene(homeScene);
-                        primaryStage.setTitle("Home Page");
+                        navigatePage("/view/StockManagerHomePage.fxml","Home Page");
                     } else if (role.equals("Cashier")){
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CashierHomePage.fxml"));
-
-                        Parent homePageRoot = loader.load();
-                        Scene homeScene = new Scene(homePageRoot);
-
-                        Stage primaryStage = (Stage) pageName.getScene().getWindow();
-                        primaryStage.setScene(homeScene);
-                        primaryStage.setTitle("Home Page");
+                        navigatePage("/view/CashierHomePage.fxml","Home Page");
                     }
-
-
                 } else {
                     System.out.println("role null");
                 }
@@ -147,10 +128,10 @@ public class LoginController implements Initializable {
 
     @FXML
     void navigateToSignUpPage(MouseEvent event) throws IOException, SQLException {
-        boolean isHasOwner = model.checkOwner();
+        boolean isHasOwner = loginBo.checkOwner();
         System.out.println(isHasOwner);
         if (isHasOwner) {
-            NewPopUpWindow.newWindowPopUp("/view/SecuirityProtection.fxml");
+            NavigationPage.newWindowPopUp("/view/SecuirityProtection.fxml");
             boolean isOwnerSubmit = sharedInfo.isOwnerSubmit();
             if (isOwnerSubmit) {
                 SignUpNavigation();
@@ -164,7 +145,7 @@ public class LoginController implements Initializable {
 
     @FXML
     void popUpForgotPassword(MouseEvent event) throws IOException {
-        NewPopUpWindow.newWindowPopUp("/view/ForgotPassword.fxml");
+        NavigationPage.newWindowPopUp("/view/ForgotPassword.fxml");
     }
 
     public void SignUpNavigation() throws IOException {
@@ -195,6 +176,16 @@ public class LoginController implements Initializable {
         imgHidePassword.setVisible(true);
         txtTextPassword.setVisible(true);
         txtTextPassword.setText(password);
+    }
+
+    public void navigatePage(String path, String name) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+        Parent homePageRoot = loader.load();
+        Scene homeScene = new Scene(homePageRoot);
+
+        Stage primaryStage = (Stage) pageName.getScene().getWindow();
+        primaryStage.setScene(homeScene);
+        primaryStage.setTitle(name);
     }
 
 

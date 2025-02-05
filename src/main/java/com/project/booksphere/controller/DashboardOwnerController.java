@@ -1,8 +1,9 @@
 package com.project.booksphere.controller;
 
-import com.project.booksphere.model.EmployeeModel;
-import com.project.booksphere.model.UserModel;
-import com.project.booksphere.util.CrudUtil;
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.OwnerDashboardBo;
+import com.project.booksphere.bo.custom.impl.OwnerDashboardBOImpl;
+import com.project.booksphere.dao.CrudUtil;
 import com.project.booksphere.util.SharedInfo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -44,8 +45,11 @@ public class DashboardOwnerController implements Initializable {
     private LineChart<String, Number> lineChartOrders;
 
     private final SharedInfo sharedInfo = SharedInfo.getInstance();
-    private final EmployeeModel employeeModel = new EmployeeModel();
-    private final UserModel userModel = new UserModel();
+//    private final EmployeeModel employeeModel = new EmployeeModel();
+//    private final UserModel userModel = new UserModel();
+
+//    private final EmployeeDAO employeeDAO = new EmployeeDAOImpl();
+    private final OwnerDashboardBo ownerDashboardBo = (OwnerDashboardBo) BOFactory.getInstance().getBO(BOFactory.BOType.OWNER_DASHBOARD);
 
     @FXML
     void viewItemPage(ActionEvent event) throws IOException {
@@ -90,7 +94,7 @@ public class DashboardOwnerController implements Initializable {
     }
 
     public void setName(String id) throws SQLException {
-        String getName = employeeModel.getName(id);
+        String getName = ownerDashboardBo.getOwnerName(id);
         lblUserName.setText(getName);
     }
 

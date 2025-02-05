@@ -1,15 +1,13 @@
 package com.project.booksphere.controller;
 
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.PurchaseBo;
+import com.project.booksphere.bo.custom.impl.PurchaseBOImpl;
 import com.project.booksphere.db.DBConnection;
-import com.project.booksphere.dto.CustomerDto;
-import com.project.booksphere.dto.OrderDetailDto;
-import com.project.booksphere.dto.OrderDto;
-import com.project.booksphere.dto.PromotionDetailDto;
-import com.project.booksphere.dto.tm.ItemTm;
-import com.project.booksphere.dto.tm.PurchaseTM;
-import com.project.booksphere.model.*;
+import com.project.booksphere.dto.*;
+import com.project.booksphere.tm.PurchaseTM;
 import com.project.booksphere.util.FocusSwitch;
-import com.project.booksphere.util.NewPopUpWindow;
+import com.project.booksphere.util.NavigationPage;
 import com.project.booksphere.util.PaymentInfo;
 import com.project.booksphere.util.SharedInfo;
 import javafx.collections.FXCollections;
@@ -22,8 +20,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -118,14 +114,23 @@ public class ManagePurchaseController implements Initializable {
     @FXML
     private TextField txtTotal;
 
-    OrdersModel ordersModel = new OrdersModel();
+//    OrdersModel ordersModel = new OrdersModel();
     private final ObservableList<PurchaseTM> purchaseTMS = FXCollections.observableArrayList();
-    ItemModel itemModel = new ItemModel();
-    CustomerModel customerModel = new CustomerModel();
-    PromotionModel promotionModel = new PromotionModel();
+//    ItemModel itemModel = new ItemModel();
+//    CustomerModel customerModel = new CustomerModel();
+//    PromotionModel promotionModel = new PromotionModel();
     PaymentInfo paymentInfo = PaymentInfo.getInstance();
-    ItemDetailModel itemDetailModel = new ItemDetailModel();
+//    ItemDetailModel itemDetailModel = new ItemDetailModel();
     SharedInfo sharedInfo = SharedInfo.getInstance();
+
+//    ItemDAO itemDAO = new ItemDAOImpl();
+//    OrderDAO orderDAO = new OrderDAOImpl();
+//    CustomerDAO customerDAO = new CustomerDAOImpl();
+//    PromotionDAO promotionDAO = new PromotionDAOImpl();
+//    ItemDetailDAO itemDetailDAO = new ItemDetailDAOImpl();
+
+    private final PurchaseBo purchaseBo = (PurchaseBo) BOFactory.getInstance().getBO(BOFactory.BOType.PURCHASE);
+
     private final FocusSwitch focusSwitch = new FocusSwitch();
 
     @FXML
@@ -136,12 +141,12 @@ public class ManagePurchaseController implements Initializable {
             String customerId = lblCustomerID.getText();
             String itemId = txtItemID.getText();
             int qty = Integer.parseInt(txtQty.getText());
-            String itemName = itemModel.searchItem(itemId);
-            double unitPrice = itemModel.getSellPrice(itemId);
+            String itemName = purchaseBo.searchItem(itemId);
+            double unitPrice = purchaseBo.getSellPrice(itemId);
             double price = qty * unitPrice;
             Button btn = new Button("Remove");
-
-            int availableQty = itemDetailModel.getQty(itemId);
+            ItemDetailDto itemDetailDto = new ItemDetailDto(itemId,"",0,0);//moda wedak
+            int availableQty = purchaseBo.getItemQty(itemDetailDto);
 
             double total = 0;
             double discountPrice = 0;
@@ -239,7 +244,7 @@ public class ManagePurchaseController implements Initializable {
             return;
         }
 
-        boolean isOrderSaved = ordersModel.orderSaved(orderDto,promotionDetailDto,paymentInfo.getPaymentDetailsDto());
+        boolean isOrderSaved = purchaseBo.orderSaved(orderDto,promotionDetailDto,paymentInfo.getPaymentDetailsDto());
         if (isOrderSaved){
             refreshPage();
             new Alert(Alert.AlertType.INFORMATION,"Order Placed successfully",ButtonType.OK).show();
@@ -253,13 +258,13 @@ public class ManagePurchaseController implements Initializable {
 
     @FXML
     void addCustomer(MouseEvent event) throws IOException {
-        NewPopUpWindow.newWindowPopUp("/view/ManageCustomer.fxml");
+        NavigationPage.newWindowPopUp("/view/ManageCustomer.fxml");
     }
 
     @FXML
     void searchCustomer(ActionEvent event) throws SQLException {
         String no = txtCustomerID.getText();
-        CustomerDto customer = customerModel.searchCustomer(no);
+        CustomerDto customer = purchaseBo.searchCustomer(no);
         lblCustomer.setText(customer.getName());
         lblCustomerID.setText(customer.getId());
         if (lblCustomer.getText() == null){
@@ -271,11 +276,11 @@ public class ManagePurchaseController implements Initializable {
     void searchItem(ActionEvent event) throws SQLException {
         String search = txtItemID.getText();
         String itemId ;
-        itemId = itemModel.searchItem(search);
+        itemId = purchaseBo.searchItem(search);
         lblItem.setText(itemId);
         if (itemId.equals("No Items")) {
             System.out.println("Yup");
-            itemId = itemModel.searchBy(search);
+            itemId = purchaseBo.searchByItemId(search);
             txtItemID.setText(itemId);
             lblItem.setText(search);
         }
@@ -308,7 +313,7 @@ public class ManagePurchaseController implements Initializable {
 
     private void refreshPage() throws SQLException {
         lblOrderDate.setText(LocalDate.now().toString());
-        txtOrderID.setText(ordersModel.getNextID());
+        txtOrderID.setText(purchaseBo.nextOrderId());
         txtTotal.setText("");
         txtDiscount.setText("");
         txtNetTotal.setText("");
@@ -338,8 +343,8 @@ public class ManagePurchaseController implements Initializable {
 
     public double getDiscount(double total) throws SQLException {
         double discountPrice = 0;
-        double discount = promotionModel.getRate(total);
-        String discountId = promotionModel.getId(discount);
+        double discount = purchaseBo.getRate(total);
+        String discountId = purchaseBo.getPromotionId(discount);
         lblDiscountID.setText(discountId);
         discountPrice = total * discount/100;
         txtDiscount.setText(String.valueOf(discountPrice));

@@ -1,9 +1,9 @@
 package com.project.booksphere.controller;
 
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.ViewPromotionBo;
 import com.project.booksphere.dto.PromotionDto;
-import com.project.booksphere.dto.tm.ViewOrderTM;
-import com.project.booksphere.dto.tm.ViewPromotionTM;
-import com.project.booksphere.model.PromotionModel;
+import com.project.booksphere.tm.ViewPromotionTM;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -45,7 +45,9 @@ public class ViewPromotionController implements Initializable {
     @FXML
     private TextField txtSearch;
 
-    private final PromotionModel promotionModel = new PromotionModel();
+//    private final PromotionModel promotionModel = new PromotionModel();
+//    private final PromotionDAO promotionDAO = new PromotionDAOImpl();
+    private final ViewPromotionBo viewPromotionBo = (ViewPromotionBo) BOFactory.getInstance().getBO(BOFactory.BOType.VIEW_PROMOTION);
 
     @FXML
     void resetPage(ActionEvent event) throws SQLException {
@@ -56,18 +58,18 @@ public class ViewPromotionController implements Initializable {
     @FXML
     void searchOrder(MouseEvent event) throws SQLException {
         String id = txtSearch.getText();
-        ArrayList<ViewPromotionTM> promotionTMS = promotionModel.searchFromId(id);
-        ObservableList<ViewPromotionTM> ViewPromotionTMS = FXCollections.observableArrayList();
-        for (ViewPromotionTM viewPromotionTM : promotionTMS) {
+        ArrayList<PromotionDto> promotionDtos = viewPromotionBo.searchPromotionFromId(id);
+        ObservableList<ViewPromotionTM> promotionDtos1 = FXCollections.observableArrayList();
+        for (PromotionDto promotionDto : promotionDtos) {
             ViewPromotionTM viewPromotionTm = new ViewPromotionTM(
-                    viewPromotionTM.getPromotionId(),
-                    viewPromotionTM.getDesc(),
-                    viewPromotionTM.getRate(),
-                    viewPromotionTM.getRange()
+                    promotionDto.getPromotionId(),
+                    promotionDto.getDesc(),
+                    promotionDto.getRate(),
+                    promotionDto.getRange()
             );
-            ViewPromotionTMS.add(viewPromotionTm);
+            promotionDtos1.add(viewPromotionTm);
         }
-        tblPromotionView.setItems(ViewPromotionTMS);
+        tblPromotionView.setItems(promotionDtos1);
     }
 
     @Override
@@ -85,7 +87,7 @@ public class ViewPromotionController implements Initializable {
     }
 
     public void refreshPage() throws SQLException {
-        ArrayList<PromotionDto> promotionTMS = promotionModel.getAll();
+        ArrayList<PromotionDto> promotionTMS = viewPromotionBo.getAllPromotions();
         ObservableList<ViewPromotionTM> ViewPromotionTMS = FXCollections.observableArrayList();
         for (PromotionDto viewPromotionTM : promotionTMS) {
             ViewPromotionTM viewPromotionTm = new ViewPromotionTM(

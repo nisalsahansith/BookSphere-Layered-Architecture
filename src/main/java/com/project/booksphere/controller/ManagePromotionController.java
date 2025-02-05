@@ -1,10 +1,11 @@
 package com.project.booksphere.controller;
 
+import com.project.booksphere.bo.BOFactory;
+import com.project.booksphere.bo.custom.PromotionBo;
+import com.project.booksphere.bo.custom.impl.PromotionBOImpl;
 import com.project.booksphere.dto.PromotionDto;
-import com.project.booksphere.dto.SupplierDto;
-import com.project.booksphere.dto.tm.PromotionTM;
-import com.project.booksphere.model.PromotionDetailModel;
-import com.project.booksphere.model.PromotionModel;
+import com.project.booksphere.tm.PromotionTM;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -61,8 +62,13 @@ public class ManagePromotionController implements Initializable {
     @FXML
     private TextField txtRange;
 
-    PromotionModel promotionModel = new PromotionModel();
-    PromotionDetailModel promotionDetailModel = new PromotionDetailModel();
+//    PromotionModel promotionModel = new PromotionModel();
+//    PromotionDetailModel promotionDetailModel = new PromotionDetailModel();
+
+//    PromotionDAO promotionDAO = new PromotionDAOImpl();
+//    PromotionDetailDAO promotionDetailDAO = new PromotionDetailDAOImpl();
+
+    private final PromotionBo promotionBo = (PromotionBo) BOFactory.getInstance().getBO(BOFactory.BOType.PROMOTION);
 
     @FXML
     void addData(ActionEvent event) throws SQLException {
@@ -71,7 +77,7 @@ public class ManagePromotionController implements Initializable {
         double rate = Double.parseDouble(txtDiscountRate.getText());
         double range = Double.parseDouble(txtRange.getText());
         PromotionDto promotionDto = new PromotionDto(supId,description,rate,range);
-        boolean isSaved = promotionModel.savePromotion(promotionDto);
+        boolean isSaved = promotionBo.savePromotion(promotionDto);
         if (isSaved) {
             refreshPage();
             new Alert(Alert.AlertType.INFORMATION,"Promotion saved successfully",ButtonType.OK).show();
@@ -100,10 +106,10 @@ public class ManagePromotionController implements Initializable {
        Alert isOk = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to delete this Promotion ?",ButtonType.YES);
         Optional<ButtonType> result = isOk.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.YES) {
-            boolean isDeletePromotionDetails = promotionDetailModel.deletePromotion(id);
-            boolean isHave = promotionDetailModel.ishave(id);
+            boolean isDeletePromotionDetails = promotionBo.deletePromotionDetail(id); //attention
+            boolean isHave = promotionBo.isHavePromotionDetail(id);
             if (isDeletePromotionDetails | isHave) {
-                boolean isDelete = promotionModel.deletePromotion(id);
+                boolean isDelete = promotionBo.deletePromotion(id); //attention
                 if (isDelete) {
                     new Alert(Alert.AlertType.INFORMATION, "Delete Successfully", ButtonType.OK).show();
                     refreshPage();
@@ -118,7 +124,7 @@ public class ManagePromotionController implements Initializable {
 
     @FXML
     void resetPage(ActionEvent event) throws SQLException {
-        lblPromotionId.setText(promotionModel.getNextId());
+        lblPromotionId.setText(promotionBo.nextPromotionId());
         txtDescription.setText("");
         txtDiscountRate.setText("");
         txtRange.setText("");
@@ -134,7 +140,7 @@ public class ManagePromotionController implements Initializable {
         double rate = Double.parseDouble(txtDiscountRate.getText());
         double range = Double.parseDouble(txtRange.getText());
         PromotionDto promotionDto = new PromotionDto(supId,description,rate,range);
-        boolean isSaved = promotionModel.updatePromotion(promotionDto);
+        boolean isSaved = promotionBo.updatePromotion(promotionDto);
         if (isSaved) {
             refreshPage();
             new Alert(Alert.AlertType.INFORMATION,"Promotion updated successfully",ButtonType.OK).show();
@@ -159,7 +165,7 @@ public class ManagePromotionController implements Initializable {
 
     public void refreshPage() throws SQLException {
         refreshTable();
-        lblPromotionId.setText(promotionModel.getNextId());
+        lblPromotionId.setText(promotionBo.nextPromotionId());
         txtDescription.setText("");
         txtDiscountRate.setText("");
         txtRange.setText("");
@@ -169,7 +175,7 @@ public class ManagePromotionController implements Initializable {
     }
 
     private void refreshTable() throws SQLException {
-        ArrayList<PromotionDto> promotionDtos = promotionModel.getAll();
+        ArrayList<PromotionDto> promotionDtos = promotionBo.getAllPromotion();
         ObservableList<PromotionTM> promotionTMS = FXCollections.observableArrayList();
         for (PromotionDto promotionDto: promotionDtos){
             PromotionTM promotionTM = new PromotionTM(
